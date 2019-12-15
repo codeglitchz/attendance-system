@@ -6,6 +6,16 @@ from modules import recognize
 import pyfiglet
 
 
+# input live stream from a recorder
+INPUT_VIDEO = "http://192.168.1.100:8080/video"
+
+# input from saved video
+# INPUT_VIDEO = "video.avi"
+
+# input from a device attached to computer
+# INPUT_VIDEO = 0  # or -1 if 0 doesn't work
+
+
 # creating the title bar function
 def title_bar():
     # os.system('cls')  # for windows
@@ -31,16 +41,16 @@ def main_menu():
             choice = int(input("Enter Choice: "))
 
             if choice == 1:
-                check_camera()
+                check_camera(INPUT_VIDEO)
                 break
             elif choice == 2:
-                capture_face()
+                capture_face(INPUT_VIDEO)
                 break
             elif choice == 3:
                 train_face()
                 break
             elif choice == 4:
-                recognize_face()
+                recognize_face(INPUT_VIDEO)
                 break
             elif choice == 5:
                 print("Thank You =)")
@@ -57,15 +67,15 @@ def main_menu():
 
 # ---------------------------------------------------------
 # calling the camera test function from check camera.py file
-def check_camera():
-    capture_video.start()
+def check_camera(input_video):
+    capture_video.start(input_video)
     main_menu()
 
 
 # --------------------------------------------------------------
 # calling the take image function form capture image.py file
-def capture_face():
-    capture_images.capture()
+def capture_face(input_video):
+    capture_images.capture(input_video)
     main_menu()
 
 
@@ -78,8 +88,8 @@ def train_face():
 
 # --------------------------------------------------------------------
 # calling the recognize_attendance from recognize.py file
-def recognize_face():
-    recognize.mark_attendance()
+def recognize_face(input_video):
+    recognize.mark_attendance(input_video)
     main_menu()
 
 

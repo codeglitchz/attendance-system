@@ -32,9 +32,9 @@ def get_images_and_labels(path):
 # ----------- train images function ---------------
 def train():
     recognizer = cv2.face_LBPHFaceRecognizer.create()
-    # haar_cascade_path = "files"+os.sep+"haarcascade_frontalface_default.xml"
+    # haar_cascade_path = "files" + os.sep + "haarcascade_frontalface_default.xml"
     # detector = cv2.CascadeClassifier(haar_cascade_path)
     faces, _id = get_images_and_labels("training_images")
     recognizer.train(faces, np.array(_id))
-    recognizer.save("files"+os.sep+"trainer.yml")
+    recognizer.save("files" + os.sep + "trainer.yml")
     print("Images Trained Successfully")
