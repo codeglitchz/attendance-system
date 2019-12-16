@@ -1,3 +1,4 @@
+pyfiglet
 appdirs==1.4.3
 attrs==19.1.0
 black==19.3b0
