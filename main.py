@@ -7,13 +7,13 @@ import pyfiglet
 
 
 # input live stream from a recorder
-INPUT_VIDEO = "http://192.168.1.100:8080/video"
+# INPUT_VIDEO = "http://192.168.1.100:8080/video"
 
 # input from saved video
 # INPUT_VIDEO = "video.avi"
 
 # input from a device attached to computer
-# INPUT_VIDEO = 0  # or -1 if 0 doesn't work
+INPUT_VIDEO = 0  # or -1 if 0 doesn't work
 
 
 # creating the title bar function
