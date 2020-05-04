@@ -28,7 +28,7 @@ def title_bar():
 # creating the user main menu function
 def main_menu():
     title_bar()
-    print()
+    # print()
     print(10*"*", "WELCOME", 10*"*")
     print("[1] Check Camera")
     print("[2] Capture Faces")
@@ -66,14 +66,14 @@ def main_menu():
 
 
 # ---------------------------------------------------------
-# calling the camera test function from check camera.py file
+# calling the camera test function from check_camera.py file
 def check_camera(input_video):
     capture_video.start(input_video)
     main_menu()
 
 
 # --------------------------------------------------------------
-# calling the take image function form capture image.py file
+# calling the take image function form capture_image.py file
 def capture_face(input_video):
     capture_images.capture(input_video)
     main_menu()
