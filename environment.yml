@@ -1,0 +1,11 @@
+name: face-recognition
+channels:
+  - conda-forge
+dependencies:
+  - python=3.7
+  - csvkit
+  - numpy
+  - opencv
+  - pandas
+  - pillow
+  - pyfiglet
