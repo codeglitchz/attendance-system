@@ -10,7 +10,7 @@ from PIL import Image
 def get_images_and_labels(path):
     # get the path of all the files in the folder
     image_paths = [os.path.join(path, f) for f in os.listdir(path)]
-    # create empty face list
+    # create empty Face list
     faces = []
     # create empty ID list
     id_list = []
