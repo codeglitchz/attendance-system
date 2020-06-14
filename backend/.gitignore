@@ -210,4 +210,5 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 # our project
+.idea/
 modules/__pycache__/
