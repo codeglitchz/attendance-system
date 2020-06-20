@@ -34,7 +34,7 @@ def train():
     recognizer = cv2.face_LBPHFaceRecognizer.create()
     # haar_cascade_path = "files" + os.sep + "haarcascade_frontalface_default.xml"
     # detector = cv2.CascadeClassifier(haar_cascade_path)
-    faces, _id = get_images_and_labels("training_images")
+    faces, _id = get_images_and_labels("static/images/known")
     recognizer.train(faces, np.array(_id))
     recognizer.save("files" + os.sep + "trainer.yml")
     print("Images Trained Successfully")

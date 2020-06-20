@@ -8,10 +8,21 @@ verify_ssl = true
 [packages]
 csvkit = "*"
 numpy = "*"
-opencv-python = "*"
 pandas = "*"
 pyfiglet = "*"
 Pillow = "*"
+requests = "*"
+flask-marshmallow = "*"
+marshmallow = "*"
+marshmallow-sqlalchemy = "*"
+python-dotenv = "*"
+Flask = "*"
+Flask-Cors = "*"
+Flask-RESTful = "*"
+Flask-Uploads = "*"
+Flask-SQLAlchemy = "*"
+Flask-JWT-Extended = "*"
+opencv-contrib-python = "*"
 
 [requires]
 python_version = "3.8"

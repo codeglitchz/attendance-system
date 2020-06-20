@@ -1,9 +1,8 @@
 import os  # accessing the os functions
-from modules import capture_video
-from modules import capture_images
-from modules import train_images
-from modules import recognize
+
 import pyfiglet
+
+from src.libs import capture_video, capture_images, train_images, recognize, strings
 
 
 # input live stream from a recorder
@@ -21,7 +20,7 @@ def title_bar():
     # os.system('cls')  # for windows
 
     # title of the program
-    title = pyfiglet.figlet_format("Attendance using Face Recognition")
+    title = pyfiglet.figlet_format("Attendance System")
     print(title)
 
 

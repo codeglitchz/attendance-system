@@ -13,7 +13,7 @@ def start(input_video):
             # gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
             # display the resulting frame
-            cv2.imshow('Checking Video - Attendance using Face Recognition', frame)
+            cv2.imshow('Checking Video - Attendance System', frame)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break

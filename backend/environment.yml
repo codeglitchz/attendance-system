@@ -1,4 +1,4 @@
-name: face-recognition
+name: attendance-system
 channels:
   - conda-forge
 dependencies:

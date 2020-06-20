@@ -48,12 +48,14 @@ def mark_attendance(input_video):
                     display_text = 'Unknown'
 
                 if conf > 75:
-                    file_number = len(os.listdir("unknown_images")) + 1
-                    cv2.imwrite("unknown_images" + os.sep + "Image" + str(file_number) +
-                                ".jpg", img[y:y+h, x:x+w])
+                    file_number = len(os.listdir("static/images/unknown")) + 1
+                    cv2.imwrite(
+                        "static" + os.sep + "images" + os.sep + "unknown" + os.sep +
+                        "Image" + str(file_number) + ".jpg", img[y:y+h, x:x+w]
+                    )
                 cv2.putText(img, display_text, (x, y+h), font, 1, (255, 255, 255), 2)
             attendance_df = attendance_df.drop_duplicates(subset=['ID'], keep='first')
-            cv2.imshow('Recognizing Faces - Attendance using Face Recognition', img)
+            cv2.imshow('Recognizing Faces - Attendance System', img)
             if cv2.waitKey(1) == ord('q'):
                 break
         else:  # video not detected

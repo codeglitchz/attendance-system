@@ -209,6 +209,11 @@ fabric.properties
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
 
-# our project
+
+# attendance-system
 .idea/
-modules/__pycache__/
+src/libs/__pycache__/
+src/models/__pycache__/
+src/resources/__pycache__/
+src/schemas/__pycache__/
+src/__pycache__/

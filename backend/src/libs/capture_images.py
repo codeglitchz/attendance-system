@@ -4,7 +4,7 @@ import cv2
 import unicodedata  # to check if entered in different unicode format
 
 
-# check if student_id is a number
+# helper function ->  to check whether student_id is a number
 def is_number(_id):
     try:
         float(_id)
@@ -53,11 +53,13 @@ def capture(input_video):
                     increment_num += 1
 
                     # saving the captured face in the data-set folder training_images
-                    cv2.imwrite("training_images" + os.sep + name + "." + student_id + '.' +
-                                str(increment_num) + ".jpg", img[y:y+h, x:x+w])  # ##gray[y:y+h, x:x+w]
+                    cv2.imwrite(
+                        "static" + os.sep + "images" + os.sep + "known" + os.sep +
+                        name + "." + student_id + '.' + str(increment_num) + ".jpg", img[y:y+h, x:x+w]
+                    )  # ##gray[y:y+h, x:x+w]
 
                     # display the resulting frame
-                    cv2.imshow('Capturing Face - Attendance using Face Recognition', img)  # ##gray
+                    cv2.imshow('Capturing Face - Attendance System', img)  # ##gray
 
                 # wait for 100 milliseconds
                 if cv2.waitKey(100) & 0xFF == ord('q'):
