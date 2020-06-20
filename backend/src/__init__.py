@@ -6,6 +6,7 @@ from marshmallow import ValidationError
 from dotenv import load_dotenv
 
 from src.db import db
+from src.resources.dashboard import Dashboard
 from src.resources.user import UserRegister, UserLogin, User
 from src.resources.event import Events, SpecialEvents
 
@@ -29,3 +30,4 @@ api.add_resource(User, "/user/<int:user_id>")
 api.add_resource(UserLogin, "/login")
 api.add_resource(Events, "/events")
 api.add_resource(SpecialEvents, "/special")
+api.add_resource(Dashboard, "/dashboard")

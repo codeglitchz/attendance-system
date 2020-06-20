@@ -1,4 +1,5 @@
 from flask_restful import Resource
+from flask_jwt_extended import jwt_required
 
 
 event_list = [
@@ -49,5 +50,6 @@ class Events(Resource):
 
 class SpecialEvents(Resource):
     @classmethod
+    @jwt_required
     def get(cls):
         return event_list, 200
