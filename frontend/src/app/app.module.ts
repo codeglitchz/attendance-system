@@ -10,7 +10,7 @@ import { EventsComponent } from './components/events/events.component';
 import { SpecialEventsComponent } from './components/special-events/special-events.component';
 
 // other imports
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptorService } from './services/token-interceptor.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -26,7 +26,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     NgbModule
   ],

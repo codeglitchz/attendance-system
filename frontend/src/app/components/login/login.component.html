@@ -9,25 +9,31 @@
             <h3 class="mb-0">Login</h3>
           </div>
           <div class="card-body">
+            <!--error alert-->
             <div class="alert alert-danger" *ngIf="errorMsg">
               <small>{{errorMsg}}</small>
             </div>
-            <form class="form" #loginForm="ngForm" (ngSubmit)="loginUser()" novalidate>
+            <!--/error alert-->
+            <form class="form" [formGroup]="loginForm" (ngSubmit)="loginUser()" novalidate>
+              <!--username-->
               <div class="form-group">
                 <label for="">Username</label>
-                <input type="text" [(ngModel)]="loginUserModel.username" #username="ngModel" 
+                <input type="text" formControlName="username"
                 [class.is-invalid]="username.invalid && username.touched" 
-                name="username" class="form-control rounded-0" required>
+                class="form-control rounded-0">
                 <small class="text-danger" [class.d-none]="username.valid || username.untouched">Username is required</small>
               </div>
+              <!--/username-->
+              <!--password-->
               <div class="form-group">
                 <label>Password</label>
-                <input type="password" [(ngModel)]="loginUserModel.password" #password="ngModel"
+                <input type="password" formControlName="password"
                 [class.is-invalid]="password.invalid && password.touched"
-                name="password" class="form-control rounded-0" required>
+                class="form-control rounded-0">
                 <small class="text-danger" [class.d-none]="password.valid || password.untouched">Password is required</small>
               </div>
-              <button [disabled]="loginForm.form.invalid" type="submit" class="btn btn-success float-right">Login</button>
+              <!--/password-->
+              <button [disabled]="!loginForm.valid" type="submit" class="btn btn-success float-right">Login</button>
             </form>
           </div>
           <!--/card-block-->

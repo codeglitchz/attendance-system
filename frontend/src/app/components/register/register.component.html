@@ -9,31 +9,40 @@
             <h3 class="mb-0">Register</h3>
           </div>
           <div class="card-body">
+            <!--response & error alerts-->
             <div class="alert alert-success" *ngIf="responseMsg">
               <small>{{responseMsg}}</small>
             </div>
             <div class="alert alert-danger" *ngIf="errorMsg">
               <small>{{errorMsg}}</small>
             </div>
-            <form class="form" #registerForm="ngForm" (ngSubmit)="registerUser()" novalidate>
+            <!--/response & error alerts-->
+            <form class="form" [formGroup]="registrationForm" (ngSubmit)="registerUser()" novalidate>
+              <!--username-->
               <div class="form-group">
                 <label for="">Username</label>
-                <input type="text" [(ngModel)]="registerUserModel.username" #username="ngModel" 
+                <input type="text" formControlName="username"
                 [class.is-invalid]="username.invalid && username.touched" 
-                name="username" class="form-control rounded-0" required>
-                <small class="text-danger" [class.d-none]="username.valid || username.untouched">Username is required</small>
-              </div>
-              <div class="form-group">
-                <label>Password</label>
-                <input type="password" [(ngModel)]="registerUserModel.password" #password="ngModel"
-                [class.is-invalid]="password.invalid && password.touched" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
-                name="password" class="form-control rounded-0" required>
-                <div *ngIf="password.errors && (password.invalid && password.touched)">
-                  <small class="text-danger" *ngIf="password.errors.required">Password is required</small>
-                  <small class="text-danger" *ngIf="password.errors.pattern">Password must be minimum 8 characters, at least one letter & one number</small>
+                class="form-control rounded-0">
+                <div *ngIf="username.invalid && username.touched"> 
+                  <small *ngIf="username.errors?.required" class="text-danger">Username is required</small>
+                  <small *ngIf="username.errors?.minlength" class="text-danger">Username must be at least 4 characters</small>
                 </div>
               </div>
-              <button [disabled]="registerForm.form.invalid" type="submit" class="btn btn-primary float-right">Register</button>
+              <!--/username-->
+              <!--password-->
+              <div class="form-group">
+                <label>Password</label>
+                <input type="password" formControlName="password" 
+                [class.is-invalid]="password.invalid && password.touched"
+                class="form-control rounded-0">
+                <div *ngIf="password.errors && (password.invalid && password.touched)">
+                  <small *ngIf="password.errors?.required" class="text-danger">Password is required</small>
+                  <small *ngIf="password.errors?.pattern" class="text-danger">Password must be minimum 8 characters, at least one letter & one number</small>
+                </div>
+              </div>
+              <!--/password-->
+              <button [disabled]="!registrationForm.valid" type="submit" class="btn btn-primary float-right">Register</button>
             </form>
           </div>
           <!--/card-block-->
