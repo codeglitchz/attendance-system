@@ -23,6 +23,7 @@
               <div class="form-group">
                 <label>Password</label>
                 <input type="password" [(ngModel)]="loginUserModel.password" #password="ngModel"
+                [class.is-invalid]="password.invalid && password.touched"
                 name="password" class="form-control rounded-0" required>
                 <small class="text-danger" [class.d-none]="password.valid || password.untouched">Password is required</small>
               </div>
