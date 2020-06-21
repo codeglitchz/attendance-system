@@ -9,3 +9,14 @@ dependencies:
   - pandas
   - pillow
   - pyfiglet
+  - flask
+  - requests
+  - flask-cors
+  - flask-restful
+  - flask-uploads
+  - flask-sqlalchemy
+  - flask-jwt-extended
+  - flask-marshmallow
+  - marshmallow
+  - marshmallow-sqlalchemy
+  - python-dotenv
