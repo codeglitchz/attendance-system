@@ -1,19 +1,32 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <a class="navbar-brand" href="#">Attendance System</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item" *ngIf="loggedIn()">
-        <a class="nav-link" routerLink="/video_feed" routerLinkActive="active">Video Feeds</a>
+        <a class="nav-link" routerLink="/video_feed" routerLinkActive="active">Video Feed</a>
       </li>
-      <li class="nav-item" *ngIf="loggedIn()">
-        <a class="nav-link" routerLink="/students" routerLinkActive="active">Students</a>
+      <li class="nav-item dropdown" *ngIf="loggedIn()">
+        <a class="nav-link dropdown-toggle" routerLink="/students" id="studentsDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Students
+        </a>
+        <div class="dropdown-menu" aria-labelledby="studentsDropDown">
+          <a class="dropdown-item" routerLink="/students/view">View Student</a>
+          <a class="dropdown-item" routerLink="/students/add">Add Student</a>
+          <a class="dropdown-item" routerLink="/students/update">Update Student</a>
+          <a class="dropdown-item" routerLink="/students/delete">Delete Student</a>
+        </div>
       </li>
-      <li class="nav-item" *ngIf="loggedIn()">
-        <a class="nav-link" routerLink="/attendance" routerLinkActive="active">Check Attendance</a>
+      <li class="nav-item dropdown" *ngIf="loggedIn()">
+        <a class="nav-link dropdown-toggle" routerLink="/attendance" id="attendanceDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Attendance
+        </a>
+        <div class="dropdown-menu" aria-labelledby="attendanceDropDown">
+          <a class="dropdown-item" routerLink="/attendance/date">By Date</a>
+          <a class="dropdown-item" routerLink="/attendance/student">By Student</a>
+        </div>
       </li>
     </ul>
     <ul class="navbar-nav">
@@ -22,7 +35,7 @@
         <a class="nav-link" style="cursor:pointer" *ngIf="loggedIn()" (click)="logoutUser()">Logout</a>        
     </ul>
   </div>
-</nav>    
+</nav>
 <div class="container">
   <router-outlet></router-outlet>            
 </div>
