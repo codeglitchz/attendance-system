@@ -4,10 +4,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 // components
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
-import { EventsComponent } from './components/events/events.component';
-import { SpecialEventsComponent } from './components/special-events/special-events.component';
+import { VideoFeedComponent } from './components/video-feed/video-feed.component';
+import { StudentsComponent } from './components/students/students.component';
+import { AttendanceComponent } from './components/attendance/attendance.component';
 
 // other imports
 import { ReactiveFormsModule } from '@angular/forms';
@@ -20,8 +22,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     AppComponent,
     RegisterComponent,
     LoginComponent,
-    EventsComponent,
-    SpecialEventsComponent,
+    VideoFeedComponent,
+    DashboardComponent,
+    StudentsComponent,
+    AttendanceComponent,
   ],
   imports: [
     BrowserModule,
@@ -30,9 +34,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     HttpClientModule,
     NgbModule
   ],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true }
-  ],
+  providers: [ { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true } ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

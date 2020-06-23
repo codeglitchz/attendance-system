@@ -39,7 +39,7 @@ export class RegisterComponent implements OnInit {
     this.submitted = true;
     this._auth.registerUser(this.registrationForm.value).subscribe(
       res => {
-        console.log('Success!', res);
+        // console.log('Success!', res);
         this.errorMsg = '';
         this.responseMsg = res.message;
       },

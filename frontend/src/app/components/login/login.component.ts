@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
         this.errorMsg = '';
 
         localStorage.setItem('access_token', res.access_token);
-        this._router.navigate(['/special']);
+        this._router.navigate(['/dashboard']);
       },
       err => {
         // console.log('Error!', err);

@@ -2,7 +2,7 @@ import os  # accessing the os functions
 
 import pyfiglet
 
-from src.libs import capture_video, capture_images, train_images, recognize, strings
+from src.libs import capture_video, capture_images, train_images, recognize
 
 
 # input live stream from a recorder

@@ -6,11 +6,14 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/events" routerLinkActive="active">Events</a>
+      <li class="nav-item" *ngIf="loggedIn()">
+        <a class="nav-link" routerLink="/video_feed" routerLinkActive="active">Video Feeds</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/special" routerLinkActive="active">Members</a>
+      <li class="nav-item" *ngIf="loggedIn()">
+        <a class="nav-link" routerLink="/students" routerLinkActive="active">Students</a>
+      </li>
+      <li class="nav-item" *ngIf="loggedIn()">
+        <a class="nav-link" routerLink="/attendance" routerLinkActive="active">Check Attendance</a>
       </li>
     </ul>
     <ul class="navbar-nav">
