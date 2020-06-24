@@ -1,10 +1,14 @@
 {
-  "user_username_exists": "A user with that username already exists.",
-  "user_not_found": "User not found.",
-  "user_deleted": "User deleted.",
-  "user_invalid_credentials": "Invalid credentials!",
-  "user_registered": "Account created successfully.",
+  "user_username_exists": "A user with that username already exists",
+  "user_not_found": "User not found",
+  "user_deleted": "User deleted",
+  "user_invalid_credentials": "Invalid credentials",
+  "user_registered": "Account created successfully",
 
-  "you_are_logged_in": "Success! You are now logged in.",
-  "login_to_continue": "Failure! More data available if you log in."
+  "you_are_logged_in": "Success! You are now logged in",
+  "login_to_continue": "Failure! More data available if you log in",
+
+  "error_inserting": "An error occurred while inserting the item",
+  "student_deleted": "'{}' with id={} was removed",
+  "student_not_found": "Student not found"
 }

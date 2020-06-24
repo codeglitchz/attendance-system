@@ -4,35 +4,29 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 // components
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { RegisterComponent } from './components/register/register.component';
-import { LoginComponent } from './components/login/login.component';
-import { VideoFeedComponent } from './components/video-feed/video-feed.component';
-import { StudentsComponent } from './components/students/students.component';
-import { AttendanceComponent } from './components/attendance/attendance.component';
+import { routingComponents } from './app-routing.module';
 
 // other imports
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptorService } from './services/token-interceptor.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { StudentListComponent } from './components/student-list/student-list.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
     AppComponent,
-    RegisterComponent,
-    LoginComponent,
-    VideoFeedComponent,
-    DashboardComponent,
-    StudentsComponent,
-    AttendanceComponent,
+    routingComponents,
+    StudentListComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    NgbModule
+    NgbModule,
+    FontAwesomeModule
   ],
   providers: [ { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true } ],
   bootstrap: [AppComponent]

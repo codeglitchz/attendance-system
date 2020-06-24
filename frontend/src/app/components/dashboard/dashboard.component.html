@@ -1,8 +1,4 @@
 <div class="mt-5">
-  <div class="alert alert-success" *ngIf="dashboardResponseMsg">
-      {{dashboardResponseMsg}}
-    </div>
-  <div class="alert alert-danger" *ngIf="dashboardErrorMsg">
-      {{dashboardErrorMsg}}
-  </div>
+  <ngb-alert *ngIf="responseMsg" [type]="'success'" (close)="responseMsg=''">{{ responseMsg }}</ngb-alert>
+  <ngb-alert *ngIf="errorMsg" [type]="'danger'" (close)="errorMsg=''">{{ errorMsg }}</ngb-alert>
 </div>

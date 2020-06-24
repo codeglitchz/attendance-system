@@ -9,19 +9,11 @@
         <a class="nav-link" routerLink="/video_feed" routerLinkActive="active">Video Feed</a>
       </li>
       <li class="nav-item dropdown" *ngIf="loggedIn()">
-        <a class="nav-link dropdown-toggle" routerLink="/students" id="studentsDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Students
-        </a>
-        <div class="dropdown-menu" aria-labelledby="studentsDropDown">
-          <a class="dropdown-item" routerLink="/students/view">View Student</a>
-          <a class="dropdown-item" routerLink="/students/add">Add Student</a>
-          <a class="dropdown-item" routerLink="/students/update">Update Student</a>
-          <a class="dropdown-item" routerLink="/students/delete">Delete Student</a>
-        </div>
+        <a class="nav-link" routerLink="/students" routerLinkActive="active">Students</a>
       </li>
       <li class="nav-item dropdown" *ngIf="loggedIn()">
         <a class="nav-link dropdown-toggle" routerLink="/attendance" id="attendanceDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Attendance
+          Check Attendance
         </a>
         <div class="dropdown-menu" aria-labelledby="attendanceDropDown">
           <a class="dropdown-item" routerLink="/attendance/date">By Date</a>

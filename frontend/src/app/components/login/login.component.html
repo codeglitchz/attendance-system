@@ -10,9 +10,7 @@
           </div>
           <div class="card-body">
             <!--error alert-->
-            <div class="alert alert-danger" *ngIf="errorMsg">
-              <small>{{errorMsg}}</small>
-            </div>
+            <ngb-alert *ngIf="errorMsg" [type]="'danger'" (close)="errorMsg=''">{{ errorMsg }}</ngb-alert>
             <!--/error alert-->
             <form class="form" [formGroup]="loginForm" (ngSubmit)="loginUser()" novalidate>
               <!--username-->

@@ -9,7 +9,7 @@ from src.db import db
 from src.resources.dashboard import Dashboard
 from src.resources.user import UserRegister, UserLogin, User
 from src.resources.event import Events, SpecialEvents
-from src.resources.student import Students
+from src.resources.student import StudentList, StudentAdd, StudentDelete
 from src.resources.attendance import Attendance
 from src.libs.video_feed import gen_frame
 
@@ -34,7 +34,9 @@ api.add_resource(UserLogin, "/login")
 api.add_resource(Events, "/events")
 api.add_resource(SpecialEvents, "/special")
 api.add_resource(Dashboard, "/dashboard")
-api.add_resource(Students, "/students")
+api.add_resource(StudentList, "/students")
+api.add_resource(StudentAdd, "/students/add")
+api.add_resource(StudentDelete, "/students/delete/<int:student_id>")
 api.add_resource(Attendance, "/attendance")
 
 

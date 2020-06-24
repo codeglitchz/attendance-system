@@ -9,8 +9,8 @@ import { DashboardService } from 'src/app/services/dashboard.service';
 })
 export class DashboardComponent implements OnInit {
 
-  dashboardResponseMsg = "";
-  dashboardErrorMsg = "";
+  responseMsg = "";
+  errorMsg = "";
 
   constructor(private _dashboardService: DashboardService) { }
 
@@ -18,16 +18,16 @@ export class DashboardComponent implements OnInit {
     this._dashboardService.getDashboard().subscribe(
       res => {
         // console.log(res);
-        this.dashboardErrorMsg = "";
-        this.dashboardResponseMsg = res.message;
+        this.errorMsg = "";
+        this.responseMsg = res.message;
       },
       err => {
         if (err instanceof HttpErrorResponse){
           // console.log(err);
           if (err.status === 401){
             // this._router.navigate(['/login']);
-            this.dashboardResponseMsg = "";
-            this.dashboardErrorMsg = err.error.message;
+            this.responseMsg = "";
+            this.errorMsg = err.error.message;
           }
         }
       }

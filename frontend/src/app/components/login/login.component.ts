@@ -13,7 +13,6 @@ export class LoginComponent implements OnInit {
 
   // loginUserModel = new User('', '');
   loginForm: FormGroup;
-  submitted = false;
   errorMsg = '';
 
   constructor(private _auth: AuthService, private _router: Router, private fb: FormBuilder) { }
@@ -34,7 +33,6 @@ export class LoginComponent implements OnInit {
   }
 
   loginUser(){
-    this.submitted = true;
     // console.log(this.loginForm.value);
     this._auth.loginUser(this.loginForm.value).subscribe(
       res => {
