@@ -1,20 +1,19 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 
 import { IStudent } from 'src/app/interfaces/student';
 import { StudentService } from 'src/app/services/student.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-
 
 @Component({
-  selector: 'app-student-list',
-  templateUrl: './student-list.component.html',
-  styleUrls: ['./student-list.component.css'],
+  selector: 'app-student',
+  templateUrl: './student.component.html',
+  styleUrls: ['./student.component.css']
 })
-export class StudentListComponent implements OnInit{
+export class StudentComponent implements OnInit {
 
-  studentForm: FormGroup
+  studentForm: FormGroup;
   public students: IStudent[] = [];
   trashIcon = faTrashAlt;
   addResponseMsg = '';
@@ -34,7 +33,7 @@ export class StudentListComponent implements OnInit{
       err => {
         // console.log(err);
       }
-    )
+    );
   }
 
   get name(){

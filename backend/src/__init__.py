@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 from src.db import db
 from src.resources.dashboard import Dashboard
 from src.resources.user import UserRegister, UserLogin, User
-from src.resources.event import Events, SpecialEvents
 from src.resources.student import StudentList, StudentAdd, StudentDelete
 from src.resources.attendance import Attendance
 from src.libs.video_feed import gen_frame
@@ -31,8 +30,6 @@ def handle_marshmallow_validation(err):
 api.add_resource(UserRegister, "/register")
 api.add_resource(User, "/user/<int:user_id>")
 api.add_resource(UserLogin, "/login")
-api.add_resource(Events, "/events")
-api.add_resource(SpecialEvents, "/special")
 api.add_resource(Dashboard, "/dashboard")
 api.add_resource(StudentList, "/students")
 api.add_resource(StudentAdd, "/students/add")
