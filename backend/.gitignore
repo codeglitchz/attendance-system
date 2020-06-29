@@ -219,3 +219,4 @@ src/schemas/__pycache__/
 src/__pycache__/
 files/data.db
 files/video.avi
+files/encodings.pickle

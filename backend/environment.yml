@@ -4,21 +4,26 @@ channels:
 dependencies:
   - python=3.7
   - python-dotenv
+  - pip
+  - bcrypt
   - csvkit
   - numpy
   - scipy
   - opencv
+  - imutils
+  - dlib
   - pandas
   - pillow
   - pyfiglet
-  - sqlalchemy
-  - marshmallow
   - flask
   - requests
   - flask-cors
   - flask-restful
-  - flask-uploads
   - flask-sqlalchemy
   - flask-jwt-extended
+  - marshmallow
   - flask-marshmallow
   - marshmallow-sqlalchemy
+  - pip:
+      - face-recognition
+      - flask-uploads
