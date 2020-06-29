@@ -1,15 +1,15 @@
-import os  # accessing the os functions
+import os
 
 import pyfiglet
 
-from src.libs import capture_video, capture_images, train_images, recognize
+from src.libs.face_util import FaceUtils
 
 
 # input live stream from a recorder
 # INPUT_VIDEO = "http://192.168.1.100:8080/video"
 
 # input from saved video
-# INPUT_VIDEO = "video.avi"
+# INPUT_VIDEO = "files" + os.sep + "video.avi"
 
 # input from a device attached to computer
 INPUT_VIDEO = 0  # or -1 if 0 doesn't work
@@ -36,60 +36,36 @@ def main_menu():
     print("[5] Quit")
 
     while True:
+        face_util = FaceUtils(INPUT_VIDEO)
+        choice = 0
         try:
             choice = int(input("Enter Choice: "))
 
             if choice == 1:
-                check_camera(INPUT_VIDEO)
+                face_util.check()
                 break
             elif choice == 2:
-                capture_face(INPUT_VIDEO)
+                face_util.detect_n_capture()
                 break
             elif choice == 3:
-                train_face()
+                face_util.create_encodings()
                 break
             elif choice == 4:
-                recognize_face(INPUT_VIDEO)
+                face_util.recognize_dlib()
                 break
             elif choice == 5:
                 print("Thank You =)")
-                break
             else:
-                print("Invalid Choice. Enter 1-4")
-                main_menu()
+                choice = 0
         except ValueError:
-            print("Invalid Choice. Enter 1-4\n Try Again")
+            choice = 0
         finally:
-            # key = input("Enter any key to return main menu")
-            pass
-
-
-# ---------------------------------------------------------
-# calling the camera test function from check_camera.py file
-def check_camera(input_video):
-    capture_video.start(input_video)
-    main_menu()
-
-
-# --------------------------------------------------------------
-# calling the take image function form capture_image.py file
-def capture_face(input_video):
-    capture_images.capture(input_video)
-    main_menu()
-
-
-# -----------------------------------------------------------------
-# calling the train images from train_images.py file
-def train_face():
-    train_images.train()
-    main_menu()
-
-
-# --------------------------------------------------------------------
-# calling the recognize_attendance from recognize.py file
-def recognize_face(input_video):
-    recognize.mark_attendance(input_video)
-    main_menu()
+            if choice == 0:
+                print("Invalid Choice. Enter 1-5")
+            elif choice == 5:
+                exit()
+            else:
+                main_menu()
 
 
 # --------------- run the main function ------------------

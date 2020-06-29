@@ -3,12 +3,16 @@ channels:
   - conda-forge
 dependencies:
   - python=3.7
+  - python-dotenv
   - csvkit
   - numpy
+  - scipy
   - opencv
   - pandas
   - pillow
   - pyfiglet
+  - sqlalchemy
+  - marshmallow
   - flask
   - requests
   - flask-cors
@@ -17,6 +21,4 @@ dependencies:
   - flask-sqlalchemy
   - flask-jwt-extended
   - flask-marshmallow
-  - marshmallow
   - marshmallow-sqlalchemy
-  - python-dotenv
