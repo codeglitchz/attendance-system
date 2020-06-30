@@ -6,11 +6,9 @@ from typing import Union
 
 import csv
 import cv2
-from imutils import paths
 import unicodedata
 import numpy as np
 import pandas as pd
-from PIL import Image
 import face_recognition
 
 
@@ -19,13 +17,13 @@ class FaceUtils:
     dataset_path = f"static{os.sep}images{os.sep}dataset"
     unknown_images_path = f"static{os.sep}images{os.sep}unknown"
 
-    haar_cascade_path = f"files{os.sep}haarcascade_frontalface_default.xml"
-    prototxt_path = f"files{os.sep}dnn{os.sep}deploy.prototxt.txt"
-    caffemodel_path = f"files{os.sep}dnn{os.sep}res10_300x300_ssd_iter_140000.caffemodel"
+    haar_cascade_path = f"files{os.sep}detectors{os.sep}haarcascade_frontalface_alt2.xml"
+    prototxt_path = f"files{os.sep}detectors{os.sep}deploy.prototxt.txt"
+    caffemodel_path = f"files{os.sep}detectors{os.sep}res10_300x300_ssd_iter_140000.caffemodel"
 
     encodings_file = f"files{os.sep}encodings.pickle"
-    dlib_model = "hog"  # or "cnn"
-    tolerance = 0.6
+    dlib_model = "hog"  # "hog" - faster, "cnn" - more accuracy
+    tolerance = 0.6  # 0.6 - default, 0.72 - strict
 
     def __init__(self, input_video: Union[int, str]):
         self.input_video = input_video
@@ -71,79 +69,42 @@ class FaceUtils:
 
         # if "student_id is a number" and "name consists of alphabetic chars only" then
         if self.is_number(student_id) and name.isalpha():
+            # create a directory for <id> of the student
+            id_path = f"{self.dataset_path}{os.sep}{student_id}"
+            if not os.path.exists(id_path):
+                os.makedirs(id_path)
             # store input video stream in cap variable
             cap = cv2.VideoCapture(self.input_video)
-            # load our serialized model from disk
-            net = cv2.dnn.readNetFromCaffe(prototxt=self.prototxt_path, caffeModel=self.caffemodel_path)
+            face_classifier = cv2.CascadeClassifier(self.haar_cascade_path)
             increment_num = 0
+
             # loop over the frames from the video stream
             while True:
                 # capture frame-by-frame
                 ret, img = cap.read()
-                if ret:  # video is detected
-                    # convert frame to grayscale
-                    # gray_frame = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+                if not ret:  # video is detected
+                    break
+                # # detect faces using haar cascade detector
+                faces = face_classifier.detectMultiScale(img, 1.0485258, 6)
 
-                    # grab the image frame dimensions and convert it to a blob
-                    (h, w) = img.shape[:2]
-                    blob = cv2.dnn.blobFromImage(
-                        cv2.resize(img, (300, 300)), 1.0, (300, 300), (104.0, 177.0, 123.0)
-                    )
+                for(x, y, w, h) in faces:
+                    increment_num += 1
 
-                    # pass the blob through the network and obtain the detections and
-                    # predictions
-                    net.setInput(blob)
-                    detections = net.forward()
-
-                    # # detect faces using haar cascade detector
-                    # faces = detector.detectMultiScale(gray_frame, 1.3, 5)
-
-                    # loop over the detections
-                    for i in range(0, detections.shape[2]):
-                        # extract the confidence (i.e., probability) associated with the
-                        # prediction
-                        confidence = detections[0, 0, i, 2]
-
-                        # filter out weak detections by ensuring the `confidence` is
-                        # greater than the minimum confidence
-                        if confidence < 0.5:
-                            continue
-
-                        # compute the (x, y)-coordinates of the bounding box for the
-                        # object
-                        box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
-                        (startX, startY, endX, endY) = box.astype("int")
-
-                        # draw the bounding box of the face along with the associated
-                        y = startY - 10 if startY - 10 > 10 else startY + 10
-                        cv2.rectangle(img, (startX, startY), (endX, endY), (0, 255, 0), 2)
-                        # # probability
-                        # text = "{:.2f}%".format(confidence * 100)
-                        # cv2.putText(
-                        #     img, text, (startX, y),
-                        #     cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2
-                        # )
-
-                        # incrementing number
-                        increment_num += 1
-                        # create a directory for <id> of the student
-                        id_path = f"{self.dataset_path}{os.sep}{student_id}"
-                        if not os.path.exists(id_path):
-                            os.makedirs(id_path)
-                        # saving the captured face in the <id> folder under static/images/dataset
-                        cv2.imwrite(
-                            f"{id_path}{os.sep}{str(increment_num)}.jpg",
-                            img[startY:endY, startX:endX]
-                        )
+                    # saving the captured face in the <id> folder under static/images/dataset
+                    cv2.imwrite(
+                        f"{id_path}{os.sep}{str(increment_num)}.jpg",
+                        img
+                    )  # img[startY:endY, startX:endX]
+                    # draw the bounding box of the face along with the associated
+                    cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
                     # display the resulting frame
-                    cv2.imshow(f"Capturing Face - {self.app_title}", img)  # gray_frame
-                    # wait for 100 milliseconds
-                    k = cv2.waitKey(100) & 0xff  # Press 'ESC' for exiting video
-                    if k == 27:
-                        break
-                    elif increment_num >= 10:  # Take 30 or 60 face sample and stop video
-                        break
-                else:  # video not detected
+                    cv2.imshow(f"Capturing Face - {self.app_title}", img)
+
+                # wait for 100 milliseconds
+                k = cv2.waitKey(100) & 0xff  # Press 'ESC' for exiting video
+                if k == 27:
+                    break
+                elif increment_num >= 15:  # Take 30 or 60 face sample and stop video
                     break
 
             # when everything is done
@@ -167,48 +128,6 @@ class FaceUtils:
             if name.isalpha():
                 # ask to input correct numeric ID
                 print("Enter ID(numbers only): ")
-
-    # helper method -> returns faces and id_list
-    @classmethod
-    def get_images_and_labels(cls, path):
-        # join the path of the parent folder to all image paths
-        id_paths = [os.path.join(path, f) for f in os.listdir(path)]
-        # print(">>> ID paths:", id_paths)
-        # initialize face list
-        faces = []
-        # initialize ID list
-        ids = []
-        detector = cv2.CascadeClassifier(cls.haar_cascade_path)
-
-        # now looping through all the image paths and loading the IDs and the images
-        for id_path in id_paths:
-            # getting the ID from the image
-            _id = int(os.path.split(id_path)[1])
-            image_paths = [os.path.join(id_path, f) for f in os.listdir(id_path)]
-            for image_path in image_paths:
-                # loading the image and converting it to gray scale
-                pil_image = Image.open(image_path).convert('L')
-                # Now we are converting the PIL image into numpy array
-                img_numpy = np.array(pil_image, 'uint8')
-                # extract the face from the training image sample
-                face = detector.detectMultiScale(img_numpy)
-                for (x, y, w, h) in face:
-                    faces.append(img_numpy[y:y+h, x:x+w])
-                    ids.append(_id)
-        # print(">>> Faces:", faces)
-        # print(">>> IDs:", ids)
-        return faces, ids
-
-    @classmethod
-    def train(cls):
-        recognizer = cv2.face_LBPHFaceRecognizer.create()
-        faces, ids = cls.get_images_and_labels(cls.dataset_path)
-        recognizer.train(faces, np.array(ids))
-        # save the model into files/trainer.yml
-        recognizer.save(f"files{os.sep}trainer.yml")
-        # recognizer.save  # worked on Mac but not on Pi
-        # Print the numer of faces trained and end program
-        print("\n [INFO] {0} faces trained.".format(len(np.unique(ids))))
 
     def recognize_n_attendance(self):
         # reading trained dataset
@@ -294,62 +213,46 @@ class FaceUtils:
 
     @classmethod
     def create_encodings(cls):
-        # grab the paths to the input images in our dataset
-        print("[INFO] quantifying faces...")
-        image_paths = list(paths.list_images(cls.dataset_path))
+        print("[INFO] loading encodings...")
+        try:
+            data = pickle.loads(open(cls.encodings_file, "rb").read())
+            # initialize the list of known encodings and known names
+            known_encodings = data["encodings"]
+            known_ids = data["ids"]
+        except FileNotFoundError:
+            # initialize the list of known encodings and known names
+            known_encodings = []
+            known_ids = []
 
-        # initialize the list of known encodings and known names
-        known_encodings = []
-        known_ids = []
+        # get single unique ids by converting into set
+        # for each _id convert it into int
+        unique_ids = [int(_id) for _id in set(known_ids)]
 
-        # load our serialized model from disk
-        net = cv2.dnn.readNetFromCaffe(prototxt=cls.prototxt_path, caffeModel=cls.caffemodel_path)
+        # get all id_paths and join the path of the parent folder to each id_path
+        id_paths = [os.path.join(cls.dataset_path, f) for f in os.listdir(cls.dataset_path)]
+        # print(">>> ID paths:", id_paths)
 
-        # loop over the image paths
-        for (index, image_path) in enumerate(image_paths):
-            # extract the person name from the image path
-            print("[INFO] processing image {}/{}".format(index + 1, len(image_paths)))
-            _id = image_path.split(os.path.sep)[-2]
-
-            # load the input image and convert it from RGB (OpenCV ordering)
-            # to dlib ordering (RGB)
-            image = cv2.imread(image_path)
-            rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-            # grab the image frame dimensions and convert it to a blob
-            (h, w) = image.shape[:2]
-            blob = cv2.dnn.blobFromImage(
-                cv2.resize(image, (300, 300)), 1.0, (300, 300), (104.0, 177.0, 123.0)
-            )
-
-            # pass the blob through the network and obtain the detections and
-            # predictions
-            net.setInput(blob)
-            detections = net.forward()
-
-            # loop over the detections
-            for i in range(0, detections.shape[2]):
-                # extract the confidence (i.e., probability) associated with the
-                # prediction
-                confidence = detections[0, 0, i, 2]
-
-                # filter out weak detections by ensuring the `confidence` is
-                # greater than the minimum confidence
-                if confidence < 0.5:
-                    continue
-
-                # compute the (x, y)-coordinates of the bounding box for the
-                # object
-                box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
-                (startX, startY, endX, endY) = box.astype("int")
+        # now looping through all the id_paths and loading the images in that id_path
+        for id_path in id_paths:
+            # getting the ID from the image
+            _id = int(os.path.split(id_path)[1])
+            if _id in unique_ids:
+                continue
+            # grab the paths to the input images of that ID
+            image_paths = [os.path.join(id_path, f) for f in os.listdir(id_path)]
+            for i, image_path in enumerate(image_paths):
+                print(f"[INFO] ID: {_id}, processing image {i + 1}/{len(image_paths)}")
+                # load the input image and convert it from RGB (OpenCV ordering)
+                # to dlib ordering (RGB)
+                image = cv2.imread(image_path)
+                rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
                 # detect the (x, y)-coordinates of the bounding boxes
                 # corresponding to each face in the input frame, then compute
                 # the facial embeddings for each face
-                boxes = [(startY, endX, endY, startX)]
+                boxes = face_recognition.face_locations(rgb, model=cls.dlib_model)
                 # compute the facial embedding for the face
                 encodings = face_recognition.face_encodings(rgb, boxes)
-
                 # loop over the encodings
                 for encoding in encodings:
                     # add each encoding + name to our set of known names and
@@ -367,6 +270,7 @@ class FaceUtils:
     def recognize_dlib(self):
         print("[INFO] loading encodings...")
         data = pickle.loads(open(self.encodings_file, "rb").read())
+        # print(len(data['encodings']) == len(data['ids']))
 
         print("[INFO] starting video stream...")
         # store input video stream in cap variable
@@ -445,8 +349,8 @@ class FaceUtils:
                         # of votes (note: in the event of an unlikely tie Python
                         # will select first entry in the dictionary)
                         _id = max(counts, key=counts.get)
-                    # update the list of names
-                    ids.append(_id)
+                    # TODO: update the list of db.names
+                    ids.append(str(_id))
                 # loop over the recognized faces
                 for ((top, right, bottom, left), name) in zip(boxes, ids):
                     # rescale the face coordinates

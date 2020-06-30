@@ -30,8 +30,8 @@ def main_menu():
     # print()
     print(10*"*", "WELCOME", 10*"*")
     print("[1] Check Camera")
-    print("[2] Capture Faces")
-    print("[3] Train Images")
+    print("[2] Capture Face")
+    print("[3] Train Classifier")
     print("[4] Recognize & Attendance")
     print("[5] Quit")
 
