@@ -1,11 +1,10 @@
-import os
-
+from decouple import config
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///files/data.db")
+DATABASE_URL = config('DATABASE_URL', default="sqlite:///files/data.db")
 
-echo = True if eval(os.environ.get("DEVELOPMENT")) else False
+echo = config('DEBUG', default=False, cast=bool)
 engine = create_engine(DATABASE_URL, echo=echo)
 
 # The key here is scoped_session: Now when we use Session, SQLAlchemy will check to see

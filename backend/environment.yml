@@ -3,7 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - python=3.7
-  - python-dotenv
+  - python-decouple
   - psycopg2
   - pip
   - bcrypt

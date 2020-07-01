@@ -11,21 +11,17 @@ import numpy as np
 import pandas as pd
 import face_recognition
 
-from src.db import Session
-
-session = Session()
-
 
 class FaceUtil:
     app_title = "Attendance System"
+
     dataset_path = f"static{os.sep}images{os.sep}dataset"
     unknown_images_path = f"static{os.sep}images{os.sep}unknown"
-
     haar_cascade_path = f"files{os.sep}detectors{os.sep}haarcascade_frontalface_alt2.xml"
     prototxt_path = f"files{os.sep}detectors{os.sep}deploy.prototxt.txt"
     caffemodel_path = f"files{os.sep}detectors{os.sep}res10_300x300_ssd_iter_140000.caffemodel"
-
     encodings_file = f"files{os.sep}encodings.pickle"
+
     dlib_model = "hog"  # "hog" - faster, "cnn" - more accuracy
     tolerance = 0.6  # 0.6 - default, 0.72 - strict
 
