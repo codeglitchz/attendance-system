@@ -4,6 +4,7 @@ channels:
 dependencies:
   - python=3.7
   - python-dotenv
+  - psycopg2
   - pip
   - bcrypt
   - csvkit
@@ -19,10 +20,9 @@ dependencies:
   - requests
   - flask-cors
   - flask-restful
-  - flask-sqlalchemy
   - flask-jwt-extended
+  - sqlalchemy
   - marshmallow
-  - flask-marshmallow
   - marshmallow-sqlalchemy
   - pip:
       - face-recognition

@@ -2,8 +2,7 @@ import os
 
 import pyfiglet
 
-from src.libs.face_util import FaceUtils
-
+from src.libs.face_util import FaceUtil
 
 # input live stream from a recorder
 # INPUT_VIDEO = "http://192.168.1.100:8080/video"
@@ -36,7 +35,7 @@ def main_menu():
     print("[5] Quit")
 
     while True:
-        face_util = FaceUtils(INPUT_VIDEO)
+        face_util = FaceUtil(INPUT_VIDEO)
         choice = 0
         try:
             choice = int(input("Enter Choice: "))

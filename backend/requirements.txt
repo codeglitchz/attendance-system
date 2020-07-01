@@ -1,4 +1,5 @@
 python-dotenv
+psycopg2
 pip
 bcrypt
 csvkit
@@ -16,8 +17,7 @@ requests
 flask-cors
 flask-restful
 flask-uploads
-flask-sqlalchemy
-marshmallow
-flask-marshmallow
 flask-jwt-extended
+sqlalchemy
+marshmallow
 marshmallow-sqlalchemy

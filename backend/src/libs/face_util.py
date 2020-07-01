@@ -11,8 +11,12 @@ import numpy as np
 import pandas as pd
 import face_recognition
 
+from src.db import Session
 
-class FaceUtils:
+session = Session()
+
+
+class FaceUtil:
     app_title = "Attendance System"
     dataset_path = f"static{os.sep}images{os.sep}dataset"
     unknown_images_path = f"static{os.sep}images{os.sep}unknown"

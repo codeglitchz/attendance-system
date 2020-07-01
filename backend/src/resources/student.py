@@ -2,9 +2,10 @@ from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required
 
+from src.db import Session
 from src.libs.strings import gettext
-from src.models.student import StudentModel
-from src.schemas.student import StudentSchema
+from src.models import StudentModel
+from src.schemas import StudentSchema
 
 student_schema = StudentSchema()
 student_list_schema = StudentSchema(many=True)
@@ -23,7 +24,7 @@ class StudentAdd(Resource):
     def post(cls):
         student_json = request.get_json()
 
-        student = student_schema.load(student_json)
+        student = student_schema.load(student_json, session=Session)
 
         try:
             student.save_to_db()
