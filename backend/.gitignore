@@ -218,3 +218,4 @@ src/resources/__pycache__/
 files/data.db
 files/video.avi
 files/encodings.pickle
+static/images/

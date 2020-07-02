@@ -8,10 +8,13 @@
       <li class="nav-item" *ngIf="loggedIn()">
         <a class="nav-link" routerLink="/video_feed" routerLinkActive="active">Video Feed</a>
       </li>
-      <li class="nav-item dropdown" *ngIf="loggedIn()">
+      <li class="nav-item" *ngIf="loggedIn()">
         <a class="nav-link" routerLink="/students" routerLinkActive="active">Students</a>
       </li>
-      <li class="nav-item dropdown" *ngIf="loggedIn()">
+      <li class="nav-item" *ngIf="loggedIn()">
+        <a class="nav-link" routerLink="/attendance" routerLinkActive="active">Check Attendance</a>
+      </li>
+      <!-- <li class="nav-item dropdown" *ngIf="loggedIn()">
         <a class="nav-link dropdown-toggle" routerLink="/attendance" id="attendanceDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Check Attendance
         </a>
@@ -19,7 +22,7 @@
           <a class="dropdown-item" routerLink="/attendance/date">By Date</a>
           <a class="dropdown-item" routerLink="/attendance/student">By Student</a>
         </div>
-      </li>
+      </li> -->
     </ul>
     <ul class="navbar-nav">
         <a class="nav-link" *ngIf="!loggedIn()" routerLink="/login" routerLinkActive="active">Login</a>

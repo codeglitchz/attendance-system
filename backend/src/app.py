@@ -9,7 +9,7 @@ from marshmallow import ValidationError
 from src.resources.dashboard import Dashboard
 from src.resources.teacher import Teacher, TeacherRegister, TeacherLogin
 from src.resources.student import StudentList, StudentAdd, StudentDelete
-from src.resources.attendance import Attendance
+from src.resources.attendance import AttendanceList
 from src.libs.video_feed import gen_frame
 
 
@@ -32,7 +32,7 @@ api.add_resource(Dashboard, "/dashboard")
 api.add_resource(StudentList, "/students")
 api.add_resource(StudentAdd, "/students/add")
 api.add_resource(StudentDelete, "/students/delete/<int:student_id>")
-api.add_resource(Attendance, "/attendance")
+api.add_resource(AttendanceList, "/attendance")
 
 
 @app.route('/video_feed')

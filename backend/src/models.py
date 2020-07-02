@@ -1,4 +1,3 @@
-from uuid import uuid4
 from typing import List
 from datetime import date as dt, datetime as dtime
 
@@ -40,7 +39,7 @@ class TeacherModel(Base):
 class StudentAttendances(Base):
     __tablename__ = "student_attendances"
     student_id = Column(Integer, ForeignKey("students.id"), primary_key=True)
-    attendance_id = Column(String(50), ForeignKey("attendances.id"), primary_key=True)
+    date = Column(Date, ForeignKey("attendances.date"), primary_key=True)
 
 
 class StudentModel(Base):
@@ -80,8 +79,9 @@ class AttendanceModel(Base):
     # Many to Many Relationship
     __tablename__ = "attendances"
 
-    id = Column(String(50), default=uuid4().hex, primary_key=True)
-    date = Column(Date, default=dt.today)
+    # id = Column(String(50), default=uuid4().hex, primary_key=True)
+    date = Column(Date, default=dt.today, primary_key=True)
+    # TODO: change time to show each student's time rather than 1 static time
     time = Column(TIMESTAMP(timezone=False), default=dtime.now)
     # creates AttendanceModel.students as list and
     # backref StudentModel.attendances as AppenderQuery object
@@ -93,16 +93,20 @@ class AttendanceModel(Base):
     )
 
     @classmethod
-    def find_by_id(cls, _id: str) -> "AttendanceModel":
-        return Session.query(cls).filter_by(id=_id).first()
-
-    @classmethod
     def find_by_date(cls, date: dt) -> "AttendanceModel":
         return Session.query(cls).filter_by(date=date).first()
 
     @classmethod
     def find_by_time(cls, time: dtime) -> "AttendanceModel":
         return Session.query(cls).filter_by(time=time).first()
+
+    @classmethod
+    def find_all(cls) -> List["AttendanceModel"]:
+        # for x in Session.query(cls, StudentModel).filter(
+        #         StudentAttendances.attendance_id == cls.id,
+        #         StudentAttendances.student_id == StudentModel.id).order_by(cls.date).all():
+        #     print(f"Date: {x.AttendanceModel.date} Name: {x.StudentModel.name} Time: {x.AttendanceModel.time}")
+        return Session.query(cls).all()
 
     def is_student_present(self, student: StudentModel) -> bool:
         return student in self.students

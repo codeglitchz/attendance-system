@@ -1,1 +1,18 @@
-<p>attendance works!</p>
+<table class="table table-striped mt-4">
+  <thead>
+    <tr>
+        <th scope="col">Date</th>
+        <th scope="col">Student</th>
+        <th scope="col">Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let day of attendances; index as i">
+        <tr *ngFor="let student of day.students; index as j">
+            <th scope="row">{{ day.date | date:'mediumDate'}}</th>
+            <td> {{ student.name }} </td>
+            <td> {{ day.time | date:'mediumTime' }} </td>
+        </tr>
+    </ng-container>
+  </tbody>
+</table>
