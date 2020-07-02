@@ -1,8 +1,11 @@
+from uuid import uuid4
 from typing import List
+from datetime import date as dt, datetime as dtime
 
+from sqlalchemy import Column, Integer, String, Date, TIMESTAMP, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String
-# from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship, backref
+
 
 from src.db import Session
 
@@ -34,11 +37,22 @@ class TeacherModel(Base):
         Session.commit()
 
 
+class StudentAttendances(Base):
+    __tablename__ = "student_attendances"
+    student_id = Column(Integer, ForeignKey("students.id"), primary_key=True)
+    attendance_id = Column(String(50), ForeignKey("attendances.id"), primary_key=True)
+
+
 class StudentModel(Base):
     __tablename__ = "students"
 
     id = Column(Integer, primary_key=True)
     name = Column(String(80), unique=True, nullable=False)
+    # attendances = relationship(
+    #     "AttendanceModel",
+    #     secondary="student_attendances",
+    #     # backref=backref("students", lazy="dynamic")
+    # )
 
     @classmethod
     def find_by_name(cls, name: str) -> "StudentModel":
@@ -61,7 +75,42 @@ class StudentModel(Base):
         Session.commit()
 
 
-# class AttendanceModel(Base):
-#     # Many students have many attendances
-#     # Many to Many Relationship
-#     __tablename__ = "attendance"
+class AttendanceModel(Base):
+    # Many students have many attendances
+    # Many to Many Relationship
+    __tablename__ = "attendances"
+
+    id = Column(String(50), default=uuid4().hex, primary_key=True)
+    date = Column(Date, default=dt.today)
+    time = Column(TIMESTAMP(timezone=False), default=dtime.now)
+    # creates AttendanceModel.students as list and
+    # backref StudentModel.attendances as AppenderQuery object
+    # which can be accessed by StudentModel.attendances.all()
+    students = relationship(
+        "StudentModel",
+        secondary="student_attendances",
+        backref=backref("attendances", lazy="dynamic")
+    )
+
+    @classmethod
+    def find_by_id(cls, _id: str) -> "AttendanceModel":
+        return Session.query(cls).filter_by(id=_id).first()
+
+    @classmethod
+    def find_by_date(cls, date: dt) -> "AttendanceModel":
+        return Session.query(cls).filter_by(date=date).first()
+
+    @classmethod
+    def find_by_time(cls, time: dtime) -> "AttendanceModel":
+        return Session.query(cls).filter_by(time=time).first()
+
+    def is_student_present(self, student: StudentModel) -> bool:
+        return student in self.students
+
+    def save_to_db(self) -> None:
+        Session.add(self)
+        Session.commit()
+
+    def delete_from_db(self) -> None:
+        Session.delete(self)
+        Session.commit()

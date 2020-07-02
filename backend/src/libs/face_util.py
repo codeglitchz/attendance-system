@@ -1,15 +1,13 @@
 import os
-import time
 import pickle
-import datetime
 from typing import Union
+from datetime import date as dt
 
-import csv
 import cv2
-import unicodedata
 import numpy as np
-import pandas as pd
 import face_recognition
+
+from src.models import StudentModel, AttendanceModel
 
 
 class FaceUtil:
@@ -47,30 +45,18 @@ class FaceUtil:
         cap.release()
         cv2.destroyAllWindows()
 
-    # helper method ->  to check whether student_id is a number
-    @classmethod
-    def is_number(cls, _id):
-        try:
-            float(_id)
-            return True
-        except ValueError:
-            pass
-        try:
-            unicodedata.numeric(_id)
-            return True
-        except (TypeError, ValueError):
-            pass
-        return False
-
     # Capture Image function definition
     def detect_n_capture(self):
-        student_id = input("Enter ID(numbers only): ")
         name = input("Enter Name(alphabets only): ")
 
-        # if "student_id is a number" and "name consists of alphabetic chars only" then
-        if self.is_number(student_id) and name.isalpha():
+        # name consists of alphabetic chars only then
+        if all(x.isalpha() or x.isspace() for x in name):
+            student = StudentModel(name=name)
+            # save student to database
+            student.save_to_db()
+
             # create a directory for <id> of the student
-            id_path = f"{self.dataset_path}{os.sep}{student_id}"
+            id_path = f"{self.dataset_path}{os.sep}{student.id}"
             if not os.path.exists(id_path):
                 os.makedirs(id_path)
             # store input video stream in cap variable
@@ -82,9 +68,9 @@ class FaceUtil:
             while True:
                 # capture frame-by-frame
                 ret, img = cap.read()
-                if not ret:  # video is detected
+                if not ret:  # video is not detected
                     break
-                # # detect faces using haar cascade detector
+                # detect faces using haar cascade detector
                 faces = face_classifier.detectMultiScale(img, 1.0485258, 6)
 
                 for(x, y, w, h) in faces:
@@ -99,7 +85,6 @@ class FaceUtil:
                     cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
                     # display the resulting frame
                     cv2.imshow(f"Capturing Face - {self.app_title}", img)
-
                 # wait for 100 milliseconds
                 k = cv2.waitKey(100) & 0xff  # Press 'ESC' for exiting video
                 if k == 27:
@@ -111,110 +96,14 @@ class FaceUtil:
             cap.release()
             cv2.destroyAllWindows()
 
-            # add details in student_details.csv file
-            row = [student_id, name]
-            with open(f"files{os.sep}student_details.csv", 'a+') as csv_file:
-                writer = csv.writer(csv_file)
-                writer.writerow(row)
-            csv_file.close()
-
-        else:
-            # if student_id input is correct then
-            if self.is_number(student_id):
-                # ask to input correct alphabetic name
-                print("Enter Name(alphabets only): ")
-
-            # if name input is correct then
-            if name.isalpha():
-                # ask to input correct numeric ID
-                print("Enter ID(numbers only): ")
-
-    def recognize_n_attendance(self):
-        # reading trained dataset
-        recognizer = cv2.face.LBPHFaceRecognizer_create()  # cv2.createLBPHFaceRecognizer()
-        recognizer.read("files" + os.sep + "trainer.yml")
-
-        # using haar cascade
-        face_cascade = cv2.CascadeClassifier(self.haar_cascade_path)
-
-        # preparing pandas dataframe
-        df = pd.read_csv("files" + os.sep + "student_details.csv")
-        col_names = ['ID', 'Name', 'Date', 'Time']
-        attendance_df = pd.DataFrame(columns=col_names)
-
-        # store input video stream capture in cap variable
-        cam = cv2.VideoCapture(self.input_video)
-        font = cv2.FONT_HERSHEY_SIMPLEX
-
-        while True:
-            # capture frame-by-frame
-            ret, img = cam.read()
-            if ret is True:  # video is detected
-                # convert frame to grayscale
-                # img = cv2.flip(img, -1)  # Flip vertically
-                gray_frame = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-                # detect faces using haar cascade detector
-                faces = face_cascade.detectMultiScale(gray_frame, 1.2, 5)
-                for (x, y, w, h) in faces:
-                    _id, confidence = recognizer.predict(gray_frame[y:y+h, x:x+w])
-
-                    # you can specify your limit here. Default is 'if confidence < 100:'
-                    # but i'm getting  wrong results even with confidence of 97.
-                    if confidence < 75:
-                        cv2.rectangle(img, (x, y), (x + w, y + h), (225, 0, 0), 2)
-                        # detect name from database here from _id
-                        confidence_percent = f"  {round(100 - confidence)}"
-                        current_time = time.time()
-                        date = datetime.datetime.fromtimestamp(current_time).strftime('%Y-%m-%d')
-                        timestamp = datetime.datetime.fromtimestamp(current_time).strftime('%H:%M:%S')
-                        student_name = df.loc[df['ID'] == _id]['Name'].values[0]
-                        display_text = student_name
-                        # print(">>> Confidence:", confidence)
-                        attendance_df.loc[len(attendance_df)] = [_id, student_name, date, timestamp]
-                        cv2.putText(img, display_text, (x + 5, y - 5), font, 1, (255, 255, 255), 2)
-                        cv2.putText(img, str(confidence_percent), (x + 5, y + h - 5), font, 1, (255, 255, 0), 1)
-                    else:
-                        display_text = "Unknown"
-                        # confidence_percent = f"  {round(100 - confidence)}"
-                        # cv2.rectangle(img, (x, y), (x + w, y + h), (225, 0, 0), 2)
-                        # capture unknown images
-
-                        # file_number = len(os.listdir(self.unknown_images_path)) + 1
-                        # cv2.imwrite(
-                        #     f"{self.unknown_images_path}{os.sep}image_{str(file_number)}.jpg",
-                        #     gray_frame[y:y+h, x:x+w]
-                        # )
-                        # display text on video frame if unknown person detected
-                        cv2.putText(img, display_text, (x + 5, y - 5), font, 1, (255, 0, 0), 2)
-                        # cv2.putText(img, str(confidence_percent), (x + 5, y + h - 5), font, 1, (255, 255, 0), 1)
-                attendance_df = attendance_df.drop_duplicates(subset=['ID'], keep='first')
-                cv2.imshow(f"Recognizing Faces - {self.app_title}", img)
-                k = cv2.waitKey(1) & 0xff  # Press 'ESC' for exiting video
-                if k == 27:
-                    break
-            else:  # video not detected
-                break
-
-        # get current time and date
-        current_time = time.time()
-        date = datetime.datetime.fromtimestamp(current_time).strftime('%Y-%m-%d')
-        timestamp = datetime.datetime.fromtimestamp(current_time).strftime('%H:%M:%S')
-        hour, minute, second = timestamp.split(":")
-
-        # create a csv(comma separated value) file and append current date and time to its name
-        file_name = f"Attendance{os.sep}{date}_{hour}-{minute}-{second}.csv"
-        attendance_df.to_csv(file_name, index=False)
-
-        # when everything is done
-        cam.release()
-        cv2.destroyAllWindows()
-        print("Attendance Successful!")
-
     @classmethod
-    def create_encodings(cls):
-        print("[INFO] loading encodings...")
+    def train_classifier(cls):
+        """
+        Train KNN Classifier by storing results in `files/encodings.pickle` file
+        """
+        # TODO: Store encodings in SQL database rather than `files/encodings.pickle` file
         try:
+            print("[INFO] loading encodings...")
             data = pickle.loads(open(cls.encodings_file, "rb").read())
             # initialize the list of known encodings and known names
             known_encodings = data["encodings"]
@@ -267,7 +156,7 @@ class FaceUtil:
         f.write(pickle.dumps(data))
         f.close()
 
-    def recognize_dlib(self):
+    def recognize_n_attendance(self):
         print("[INFO] loading encodings...")
         data = pickle.loads(open(self.encodings_file, "rb").read())
         # print(len(data['encodings']) == len(data['ids']))
@@ -277,6 +166,13 @@ class FaceUtil:
         cap = cv2.VideoCapture(self.input_video)
         # load our serialized model from disk
         net = cv2.dnn.readNetFromCaffe(prototxt=self.prototxt_path, caffeModel=self.caffemodel_path)
+
+        # find if today's attendance exists in the database
+        attendance = AttendanceModel.find_by_date(date=dt.today())
+        # if not
+        if attendance is None:
+            # create new instance for today's attendance
+            attendance = AttendanceModel()
 
         # loop over the frames from the video stream
         while True:
@@ -322,14 +218,15 @@ class FaceUtil:
                 boxes = [(startY, endX, endY, startX)]
 
                 encodings = face_recognition.face_encodings(rgb, boxes)
-                ids = []
+                names = []
 
                 # loop over the facial embeddings
                 for encoding in encodings:
                     # attempt to match each face in the input image to our known
                     # encodings
                     matches = face_recognition.compare_faces(data["encodings"], encoding, self.tolerance)
-                    _id = "Unknown"
+                    # name to be displayed on video
+                    display_name = "Unknown"
 
                     # check to see if we have found a match
                     if True in matches:
@@ -349,10 +246,21 @@ class FaceUtil:
                         # of votes (note: in the event of an unlikely tie Python
                         # will select first entry in the dictionary)
                         _id = max(counts, key=counts.get)
-                    # TODO: update the list of db.names
-                    ids.append(str(_id))
+                        if _id:
+                            # find matched student in the database by id
+                            student = StudentModel.find_by_id(_id)
+                            # update displayed name to student's name
+                            display_name = student.name
+                            # if student is not present already
+                            if not attendance.is_student_present(student):
+                                # then mark his attendance
+                                attendance.students.append(student)
+                    # append the name to be displayed in names list
+                    names.append(display_name)
                 # loop over the recognized faces
-                for ((top, right, bottom, left), name) in zip(boxes, ids):
+                for ((top, right, bottom, left), display_name) in zip(boxes, names):
+                    if display_name == "Unknown":
+                        continue
                     # rescale the face coordinates
                     top = int(top * r)
                     right = int(right * r)
@@ -364,7 +272,7 @@ class FaceUtil:
                     # draw the predicted face name on the image
                     cv2.rectangle(img, top_left, bottom_right, (0, 255, 0), 2)
                     y = top - 15 if top - 15 > 15 else top + 15
-                    cv2.putText(img, name, (left, y), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
+                    cv2.putText(img, display_name, (left, y), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
 
             # display the output frames to the screen
             cv2.imshow(f"Recognizing Faces - {self.app_title}", img)
@@ -372,6 +280,9 @@ class FaceUtil:
             if k == 27:
                 break
 
+        # commit all changes to database
+        attendance.save_to_db()
         # do a bit of cleanup
         cap.release()
         cv2.destroyAllWindows()
+        print("Attendance Successful!")

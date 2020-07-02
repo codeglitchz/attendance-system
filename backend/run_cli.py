@@ -2,7 +2,12 @@ import os
 
 import pyfiglet
 
+from src.db import engine
+from src.models import Base
 from src.libs.face_util import FaceUtil
+
+# create database tables
+Base.metadata.create_all(engine)
 
 # input live stream from a recorder
 # INPUT_VIDEO = "http://192.168.1.100:8080/video"
@@ -47,10 +52,10 @@ def main_menu():
                 face_util.detect_n_capture()
                 break
             elif choice == 3:
-                face_util.create_encodings()
+                face_util.train_classifier()
                 break
             elif choice == 4:
-                face_util.recognize_dlib()
+                face_util.recognize_n_attendance()
                 break
             elif choice == 5:
                 print("Thank You =)")
