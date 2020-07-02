@@ -20,7 +20,7 @@ class FaceUtil:
     caffemodel_path = f"files{os.sep}detectors{os.sep}res10_300x300_ssd_iter_140000.caffemodel"
     encodings_file = f"files{os.sep}encodings.pickle"
 
-    dlib_model = "hog"  # "hog" - faster, "cnn" - more accuracy
+    dlib_model = "hog"  # "hog" - faster but less accurate, "cnn" - more accurate but slower
     tolerance = 0.6  # 0.6 - default, 0.72 - strict
 
     def __init__(self, input_video: Union[int, str]):
@@ -253,7 +253,7 @@ class FaceUtil:
                             display_name = student.name
                             # if student is not present already
                             if not attendance.is_student_present(student):
-                                # then mark his attendance
+                                # then mark student's attendance
                                 attendance.students.append(student)
                     # append the name to be displayed in names list
                     names.append(display_name)
