@@ -12,7 +12,7 @@ from src.resources.video_feed import VideoFeed
 
 
 app = Flask(__name__)
-app.config.from_object("src.settings")  # imports from src
+app.config.from_object("src.settings.FlaskAppConfiguration")
 api = Api(app)
 jwt = JWTManager(app)
 cors = CORS(app)

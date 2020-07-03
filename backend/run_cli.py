@@ -4,19 +4,20 @@ import pyfiglet
 
 from src.db import engine
 from src.models import Base
+from src.settings import VIDEO_SOURCE
 from src.libs.face_util import FaceUtil
 
 # create database tables
 Base.metadata.create_all(engine)
 
 # input live stream from a recorder
-# INPUT_VIDEO = "http://192.168.1.100:8080/video"
+# VIDEO_SOURCE = "http://192.168.1.100:8080/video"
 
 # input from saved video
-# INPUT_VIDEO = "files" + os.sep + "video.avi"
+# VIDEO_SOURCE = f"files{os.sep}video.avi"
 
 # input from a device attached to computer
-INPUT_VIDEO = 0  # or -1 if 0 doesn't work
+# VIDEO_SOURCE = 0  # or -1, 1, 2, 3.. if 0 doesn't work
 
 
 # creating the title bar function
@@ -40,7 +41,7 @@ def main_menu():
     print("[5] Quit")
 
     while True:
-        face_util = FaceUtil(INPUT_VIDEO)
+        face_util = FaceUtil(VIDEO_SOURCE)
         choice = 0
         try:
             choice = int(input("Enter Choice: "))

@@ -8,20 +8,15 @@ import numpy as np
 import face_recognition
 
 from src.models import StudentModel, AttendanceModel
+from src.settings import (
+    DATASET_PATH,
+    HAAR_CASCADE_PATH, PROTOTXT_PATH, CAFFEMODEL_PATH,
+    DLIB_MODEL, DLIB_TOLERANCE, ENCODINGS_FILE
+)
 
 
 class FaceUtil:
     app_title = "Attendance System"
-
-    dataset_path = f"static{os.sep}images{os.sep}dataset"
-    unknown_images_path = f"static{os.sep}images{os.sep}unknown"
-    haar_cascade_path = f"files{os.sep}detectors{os.sep}haarcascade_frontalface_alt2.xml"
-    prototxt_path = f"files{os.sep}detectors{os.sep}deploy.prototxt.txt"
-    caffemodel_path = f"files{os.sep}detectors{os.sep}res10_300x300_ssd_iter_140000.caffemodel"
-    encodings_file = f"files{os.sep}encodings.pickle"
-
-    dlib_model = "hog"  # "hog" - faster but less accurate, "cnn" - more accurate but slower
-    tolerance = 0.6  # 0.6 - default, 0.72 - strict
 
     def __init__(self, input_video: Union[int, str]):
         self.input_video = input_video
@@ -56,12 +51,12 @@ class FaceUtil:
             student.save_to_db()
 
             # create a directory for <id> of the student
-            id_path = f"{self.dataset_path}{os.sep}{student.id}"
+            id_path = f"{DATASET_PATH}{os.sep}{student.id}"
             if not os.path.exists(id_path):
                 os.makedirs(id_path)
             # store input video stream in cap variable
             cap = cv2.VideoCapture(self.input_video)
-            face_classifier = cv2.CascadeClassifier(self.haar_cascade_path)
+            face_classifier = cv2.CascadeClassifier(HAAR_CASCADE_PATH)
             increment_num = 0
 
             # loop over the frames from the video stream
@@ -104,7 +99,7 @@ class FaceUtil:
         # TODO: Store encodings in SQL database rather than `files/encodings.pickle` file
         try:
             print("[INFO] loading encodings...")
-            data = pickle.loads(open(cls.encodings_file, "rb").read())
+            data = pickle.loads(open(ENCODINGS_FILE, "rb").read())
             # initialize the list of known encodings and known names
             known_encodings = data["encodings"]
             known_ids = data["ids"]
@@ -118,7 +113,7 @@ class FaceUtil:
         unique_ids = [int(_id) for _id in set(known_ids)]
 
         # get all id_paths and join the path of the parent folder to each id_path
-        id_paths = [os.path.join(cls.dataset_path, f) for f in os.listdir(cls.dataset_path)]
+        id_paths = [os.path.join(DATASET_PATH, f) for f in os.listdir(DATASET_PATH)]
         # print(">>> ID paths:", id_paths)
 
         # now looping through all the id_paths and loading the images in that id_path
@@ -139,7 +134,7 @@ class FaceUtil:
                 # detect the (x, y)-coordinates of the bounding boxes
                 # corresponding to each face in the input frame, then compute
                 # the facial embeddings for each face
-                boxes = face_recognition.face_locations(rgb, model=cls.dlib_model)
+                boxes = face_recognition.face_locations(rgb, model=DLIB_MODEL)
                 # compute the facial embedding for the face
                 encodings = face_recognition.face_encodings(rgb, boxes)
                 # loop over the encodings
@@ -152,20 +147,20 @@ class FaceUtil:
         # dump the facial encodings + names to disk
         print("[INFO] serializing encodings...")
         data = {"encodings": known_encodings, "ids": known_ids}
-        f = open(cls.encodings_file, "wb")
+        f = open(ENCODINGS_FILE, "wb")
         f.write(pickle.dumps(data))
         f.close()
 
     def recognize_n_attendance(self):
         print("[INFO] loading encodings...")
-        data = pickle.loads(open(self.encodings_file, "rb").read())
+        data = pickle.loads(open(ENCODINGS_FILE, "rb").read())
         # print(len(data['encodings']) == len(data['ids']))
 
         print("[INFO] starting video stream...")
         # store input video stream in cap variable
         cap = cv2.VideoCapture(self.input_video)
         # load our serialized model from disk
-        net = cv2.dnn.readNetFromCaffe(prototxt=self.prototxt_path, caffeModel=self.caffemodel_path)
+        net = cv2.dnn.readNetFromCaffe(prototxt=PROTOTXT_PATH, caffeModel=CAFFEMODEL_PATH)
 
         # find if today's attendance exists in the database
         attendance = AttendanceModel.find_by_date(date=dt.today())
@@ -224,7 +219,7 @@ class FaceUtil:
                 for encoding in encodings:
                     # attempt to match each face in the input image to our known
                     # encodings
-                    matches = face_recognition.compare_faces(data["encodings"], encoding, self.tolerance)
+                    matches = face_recognition.compare_faces(data["encodings"], encoding, DLIB_TOLERANCE)
                     # name to be displayed on video
                     display_name = "Unknown"
 
