@@ -1,7 +1,7 @@
 from flask import Response
 from flask_restful import Resource
 
-from src.libs.camera_opencv import RecognitionCamera
+from src.libs.web_utils import RecognitionCamera
 
 
 class VideoFeed(Resource):

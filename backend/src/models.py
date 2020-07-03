@@ -108,7 +108,7 @@ class AttendanceModel(Base):
         #     print(f"Date: {x.AttendanceModel.date} Name: {x.StudentModel.name} Time: {x.AttendanceModel.time}")
         return Session.query(cls).all()
 
-    def is_student_present(self, student: StudentModel) -> bool:
+    def is_marked(self, student: StudentModel) -> bool:
         return student in self.students
 
     def save_to_db(self) -> None:

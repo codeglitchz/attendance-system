@@ -5,7 +5,7 @@ import pyfiglet
 from src.db import engine
 from src.models import Base
 from src.settings import VIDEO_SOURCE
-from src.libs.face_util import FaceUtil
+from src.libs.cli_utils import CliAppUtils
 
 # create database tables
 Base.metadata.create_all(engine)
@@ -41,7 +41,7 @@ def main_menu():
     print("[5] Quit")
 
     while True:
-        face_util = FaceUtil(VIDEO_SOURCE)
+        face_util = CliAppUtils(VIDEO_SOURCE)
         choice = 0
         try:
             choice = int(input("Enter Choice: "))
