@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, Response
+from flask import Flask, jsonify
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
@@ -32,10 +32,3 @@ api.add_resource(StudentList, "/students")
 api.add_resource(StudentAdd, "/students/add")
 api.add_resource(StudentDelete, "/students/delete/<int:student_id>")
 api.add_resource(AttendanceList, "/attendance")
-
-
-# @app.route('/video_feed')
-# # TODO: @jwt_required not working
-# def video_feed():
-#     """Video streaming route. Put this in the src attribute of an img tag."""
-#     return Response(gen_frame(), mimetype='multipart/x-mixed-replace; boundary=frame')
