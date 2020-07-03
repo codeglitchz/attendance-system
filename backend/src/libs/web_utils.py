@@ -3,6 +3,7 @@ from typing import Dict
 from datetime import date as dt
 
 import cv2
+import imutils
 import numpy as np
 import face_recognition
 
@@ -38,7 +39,7 @@ class DetectionCamera(BaseCamera):
             # read current frame
             _, img = camera.read()
 
-            # TODO: logic of recognition or detection
+            # TODO: logic of face detection
 
             # encode as a jpeg image and return it
             yield cv2.imencode('.jpg', img)[1].tobytes()
@@ -46,6 +47,7 @@ class DetectionCamera(BaseCamera):
 
 class RecognitionCamera(BaseCamera):
     video_source = 0
+    process_this_frame = True
 
     def __init__(self):
         if VIDEO_SOURCE:
@@ -77,7 +79,6 @@ class RecognitionCamera(BaseCamera):
 
         # create in dictionary for known students from database to avoid multiple queries
         known_students = {}
-
         while True:
             # read current frame
             _, img = camera.read()
@@ -85,65 +86,71 @@ class RecognitionCamera(BaseCamera):
             yield cls.recognize_n_attendance(img, attendance, data, known_students)
 
     @classmethod
-    def recognize_n_attendance(cls, img: np.ndarray, attendance: AttendanceModel,
+    def recognize_n_attendance(cls, frame: np.ndarray, attendance: AttendanceModel,
                                data: Dict, known_students: Dict) -> bytes:
         # convert the input frame from BGR to RGB then resize it to have
         # a width of 750px (to speedup processing)
-        rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        # rgb = imutils.resize(img, width=750)
-        r = img.shape[1] / float(rgb.shape[1])
+        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        rgb = imutils.resize(rgb_frame, width=750)
+        r = frame.shape[1] / float(rgb.shape[1])
 
-        # detect the (x, y)-coordinates of the bounding boxes
-        # corresponding to each face in the input frame, then compute
-        # the facial embeddings for each face
-        boxes = face_recognition.face_locations(rgb, model=DLIB_MODEL)
-
-        encodings = face_recognition.face_encodings(rgb, boxes)
+        boxes = []
+        encodings = []
         names = []
 
-        # loop over the facial embeddings
-        for encoding in encodings:
-            # attempt to match each face in the input image to our known encodings
-            matches = face_recognition.compare_faces(data["encodings"], encoding, DLIB_TOLERANCE)
-            # name to be displayed on video
-            display_name = "Unknown"
+        # Only process every other frame of video to save time
+        if cls.process_this_frame:
+            # detect the (x, y)-coordinates of the bounding boxes
+            # corresponding to each face in the input frame, then compute
+            # the facial embeddings for each face
+            boxes = face_recognition.face_locations(rgb, model=DLIB_MODEL)
 
-            # check to see if we have found a match
-            if True in matches:
-                # find the indexes of all matched faces then initialize a
-                # dictionary to count the total number of times each face
-                # was matched
-                matched_indexes = [i for (i, b) in enumerate(matches) if b]
-                counts = {}
+            encodings = face_recognition.face_encodings(rgb, boxes)
 
-                # loop over the matched indexes and maintain a count for
-                # each recognized face
-                for matched_index in matched_indexes:
-                    _id = data["ids"][matched_index]
-                    counts[_id] = counts.get(_id, 0) + 1
+            # loop over the facial embeddings
+            for encoding in encodings:
+                # attempt to match each face in the input image to our known encodings
+                matches = face_recognition.compare_faces(data["encodings"], encoding, DLIB_TOLERANCE)
+                # name to be displayed on video
+                display_name = "Unknown"
 
-                # determine the recognized face with the largest number
-                # of votes (note: in the event of an unlikely tie Python
-                # will select first entry in the dictionary)
-                _id = max(counts, key=counts.get)
-                if _id:
-                    if _id in known_students.keys():
-                        # find matched student in the known_students by id
-                        student = known_students[_id]
-                    else:
-                        # find matched student in the database by id
-                        student = StudentModel.find_by_id(_id)
-                        known_students[_id] = student
-                    # if student's attendance is not marked
-                    if not attendance.is_marked(student):
-                        # then mark student's attendance
-                        attendance.students.append(student)
-                        # commit changes to database
-                        attendance.save_to_db()
-                    # update displayed name to student's name
-                    display_name = student.name
-            # append the name to be displayed in names list
-            names.append(display_name)
+                # check to see if we have found a match
+                if True in matches:
+                    # find the indexes of all matched faces then initialize a
+                    # dictionary to count the total number of times each face
+                    # was matched
+                    matched_indexes = [i for (i, b) in enumerate(matches) if b]
+                    counts = {}
+
+                    # loop over the matched indexes and maintain a count for
+                    # each recognized face
+                    for matched_index in matched_indexes:
+                        _id = data["ids"][matched_index]
+                        counts[_id] = counts.get(_id, 0) + 1
+
+                    # determine the recognized face with the largest number
+                    # of votes (note: in the event of an unlikely tie Python
+                    # will select first entry in the dictionary)
+                    _id = max(counts, key=counts.get)
+                    if _id:
+                        if _id in known_students.keys():
+                            # find matched student in the known_students by id
+                            student = known_students[_id]
+                        else:
+                            # find matched student in the database by id
+                            student = StudentModel.find_by_id(_id)
+                            known_students[_id] = student
+                        # if student's attendance is not marked
+                        if not attendance.is_marked(student):
+                            # then mark student's attendance
+                            attendance.students.append(student)
+                            # commit changes to database
+                            attendance.save_to_db()
+                        # update displayed name to student's name
+                        display_name = student.name
+                # append the name to be displayed in names list
+                names.append(display_name)
+        cls.process_this_frame = not cls.process_this_frame
         # loop over the recognized faces
         for ((top, right, bottom, left), display_name) in zip(boxes, names):
             if display_name == "Unknown":
@@ -157,8 +164,8 @@ class RecognitionCamera(BaseCamera):
             bottom_right = (right, bottom)
 
             # draw the predicted face name on the image
-            cv2.rectangle(img, top_left, bottom_right, (0, 255, 0), 2)
+            cv2.rectangle(frame, top_left, bottom_right, (0, 255, 0), 2)
             y = top - 15 if top - 15 > 15 else top + 15
-            cv2.putText(img, display_name, (left, y), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
+            cv2.putText(frame, display_name, (left, y), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
         # display the output frames to the screen
-        return cv2.imencode('.jpg', img)[1].tobytes()
+        return cv2.imencode('.jpg', frame)[1].tobytes()

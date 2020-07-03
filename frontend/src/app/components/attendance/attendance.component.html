@@ -9,7 +9,7 @@
   <tbody>
     <ng-container *ngFor="let day of attendances; index as i">
         <tr *ngFor="let student of day.students; index as j">
-            <th scope="row">{{ day.date | date:'mediumDate'}}</th>
+            <th scope="row">{{ day.date | date:'shortDate'}}</th>
             <td> {{ student.name }} </td>
             <td> {{ day.time | date:'mediumTime' }} </td>
         </tr>
