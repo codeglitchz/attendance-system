@@ -52,8 +52,11 @@
     <tr *ngFor="let feed of feeds; index as i">
       <th scope="row">{{ feed.id }}</th>
       <td>
-        <div *ngIf="!feed.is_active">Inactive</div>
-        <div *ngIf="feed.is_active" style="color:red">
+        <div *ngIf="!feed.is_active">
+          <fa-icon [icon]="circleIcon" style="color:red" size="xs"></fa-icon>&nbsp;
+          Inactive
+        </div>
+        <div *ngIf="feed.is_active" style="color:green">
           <fa-icon [icon]="circleIcon" size="xs"></fa-icon>&nbsp;
           <a class="nav-link" style="padding:0rem;display:inline" [routerLink]="generatePreviewUrl(feed.id)">Live</a>
         </div>

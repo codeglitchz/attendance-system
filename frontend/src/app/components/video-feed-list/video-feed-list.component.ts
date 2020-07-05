@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { faVideo, faCircle, faPlay, faStop } from '@fortawesome/free-solid-svg-icons';
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
@@ -27,7 +28,7 @@ export class VideoFeedListComponent implements OnInit {
   addResponseMsg = '';
   delResponseMsg = '';
 
-  constructor(private _videoFeedService: VideoFeedService, private fb: FormBuilder) { }
+  constructor(private _videoFeedService: VideoFeedService, private fb: FormBuilder, private router: Router) { }
 
   ngOnInit(): void {
     this.videoFeedForm = this.fb.group({
@@ -99,6 +100,7 @@ export class VideoFeedListComponent implements OnInit {
             res => console.log(res),
             err => console.log(err)
           );
+          this.router.navigate(['/video_feeds/preview', feed.id]);
           return feed.is_active = true;
         }
       }

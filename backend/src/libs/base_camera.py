@@ -1,5 +1,9 @@
-import time
+# -*- coding: utf-8 -*-
+# From https://github.com/miguelgrinberg/flask-video-streaming
+import logging
 import threading
+import time
+
 try:
     from greenlet import getcurrent as get_ident
 except ImportError:
@@ -7,6 +11,8 @@ except ImportError:
         from thread import get_ident
     except ImportError:
         from _thread import get_ident
+
+logger = logging.getLogger(__name__)
 
 
 class CameraEvent(object):
@@ -52,21 +58,27 @@ class CameraEvent(object):
 
 
 class BaseCamera(object):
-    thread = None  # background thread that reads frames from camera
-    frame = None  # current frame is stored here by background thread
-    last_access = 0  # time of last client access to the camera
-    stopped = False
-    event = CameraEvent()
+    thread = {}  # background thread that reads frames from camera
+    frame = {}  # current frame is stored here by background thread
+    last_access = {}  # time of last client access to the camera
+    event = {}
+    running = {}
 
-    def __init__(self):
+    def __init__(self, unique_id=None):
         """Start the background camera thread if it isn't running yet."""
-        self.stopped = False
-        if BaseCamera.thread is None:
-            BaseCamera.last_access = time.time()
+        self.unique_id = unique_id
+        BaseCamera.event[self.unique_id] = CameraEvent()
+        BaseCamera.running[self.unique_id] = True
+
+        if self.unique_id not in BaseCamera.thread:
+            BaseCamera.thread[self.unique_id] = None
+
+        if BaseCamera.thread[self.unique_id] is None:
+            BaseCamera.last_access[self.unique_id] = time.time()
 
             # start background frame thread
-            BaseCamera.thread = threading.Thread(target=self._thread)
-            BaseCamera.thread.start()
+            BaseCamera.thread[self.unique_id] = threading.Thread(target=self._thread, args=(self.unique_id,))
+            BaseCamera.thread[self.unique_id].start()
 
             # wait until frames are available
             while self.get_frame() is None:
@@ -74,42 +86,45 @@ class BaseCamera(object):
 
     def get_frame(self):
         """Return the current camera frame."""
-        BaseCamera.last_access = time.time()
+        BaseCamera.last_access[self.unique_id] = time.time()
 
         # wait for a signal from the camera thread
-        BaseCamera.event.wait()
-        BaseCamera.event.clear()
+        BaseCamera.event[self.unique_id].wait()
+        BaseCamera.event[self.unique_id].clear()
 
-        return BaseCamera.frame
+        return BaseCamera.frame[self.unique_id]
 
     @staticmethod
     def frames():
         """"Generator that returns frames from the camera."""
-        raise RuntimeError('Must be implemented by subclasses.')
+        raise RuntimeError('Must be implemented by subclasses')
 
     @classmethod
-    def _thread(cls):
+    def _thread(cls, unique_id):
         """Camera background thread."""
-        print('Starting camera thread.')
-        # get new frames
+        print('Starting camera thread')
         frames_iterator = cls.frames()
         for frame in frames_iterator:
-            BaseCamera.frame = frame
-            BaseCamera.event.set()  # send signal to clients
+            BaseCamera.frame[unique_id] = frame
+            BaseCamera.event[unique_id].set()  # send signal to clients
             time.sleep(0)
-            # if there hasn't been any clients asking for frames in
+            # if there haven't been any clients asking for frames in
             # the last 10 seconds then stop the thread
-            if time.time() - BaseCamera.last_access > 10:
+            # if time.time() - BaseCamera.last_access[unique_id] > 10:
+            #     frames_iterator.close()
+            #     print(f"[{unique_id}] Stopping camera thread due to inactivity")
+            #     break
+            if not BaseCamera.running[unique_id]:
                 frames_iterator.close()
-                print('Stopping camera thread due to inactivity.')
+                print(f"[{unique_id}] Camera thread instructed to shut down")
                 break
-            # stop the video feed by changing VIDEO_FEED global variable to false
-            if cls.stopped:
-                frames_iterator.close()
-                print('Camera manually stopped.')
-                break
-        BaseCamera.thread = None
+        BaseCamera.thread[unique_id] = None
+        BaseCamera.running[unique_id] = False
 
-    @classmethod
-    def stop_feed(cls):
-        cls.stopped = True
+    @staticmethod
+    def stop(unique_id):
+        BaseCamera.running[unique_id] = False
+
+    @staticmethod
+    def is_running(unique_id):
+        return BaseCamera.running[unique_id]

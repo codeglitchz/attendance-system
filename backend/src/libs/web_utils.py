@@ -50,13 +50,10 @@ class RecognitionCamera(BaseCamera):
     # this class variable will help to process every other frame of video to save time
     process_this_frame = True
 
-    def __init__(self, video_feed: VideoFeedModel):
-        if VIDEO_SOURCE:
-            self.video_feed = video_feed
-            print(video_feed.id)
-            RecognitionCamera.set_video_source(VIDEO_SOURCE)
-            # RecognitionCamera.set_video_source(video_feed.url)
-        super(RecognitionCamera, self).__init__()
+    # def __init__(self, unique_id=None):
+    #     if VIDEO_SOURCE:
+    #         RecognitionCamera.set_video_source(VIDEO_SOURCE)
+    #     super(RecognitionCamera, self).__init__(unique_id)
 
     @classmethod
     def set_video_source(cls, source):
@@ -66,6 +63,7 @@ class RecognitionCamera(BaseCamera):
     def frames(cls):
         print("[INFO] starting video stream...")
         camera = cv2.VideoCapture(cls.video_source)
+
         # store input video stream in camera variable
         if not camera.isOpened():
             raise RuntimeError('Could not start camera.')
@@ -91,7 +89,6 @@ class RecognitionCamera(BaseCamera):
     @classmethod
     def recognize_n_attendance(cls, frame: np.ndarray, attendance: AttendanceModel,
                                data: Dict, known_students: Dict) -> bytes:
-        print("playing...")
         # convert the input frame from BGR to RGB then resize it to have
         # a width of 750px (to speedup processing)
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)

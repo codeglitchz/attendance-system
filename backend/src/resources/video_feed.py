@@ -1,6 +1,6 @@
 from flask import Response, request
 from flask_restful import Resource
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.db import Session
 from src.libs.strings import gettext
@@ -23,6 +23,7 @@ class VideoFeedList(Resource):
 
 class VideoFeed(Resource):
     @classmethod
+    @jwt_required
     def get(cls, feed_id: str):
         """Video streaming route "/video_feed". Put this in the src attribute of an img tag."""
         video_feed = VideoFeedModel.find_by_id(feed_id)
@@ -33,18 +34,23 @@ class VideoFeed(Resource):
         return {"message": gettext('video_feed_not_found')}, 404
 
 
-# TODO: make this get() to work with @jwt_required
+# TODO: make this get() to work with @jwt_required by sending response with Flask-RESTful instead of Response()
 class VideoFeedPreview(Resource):
     @classmethod
     def get(cls, feed_id: str):
         """Video streaming route. Put this route in the src attribute of an img tag."""
         video_feed = VideoFeedModel.find_by_id(feed_id)
-
+        feed_url = video_feed.url
+        camera_stream = RecognitionCamera
+        if feed_url == "0":
+            feed_url = 0
+        camera_stream.set_video_source(feed_url)
         if video_feed:
-            return Response(
-                cls.gen_frame(RecognitionCamera(video_feed)),
+            resp = Response(
+                cls.gen_frame(camera_stream(unique_id=feed_id)),
                 mimetype='multipart/x-mixed-replace; boundary=frame'
             )
+            return resp
 
         return {"message": gettext('video_feed_not_found')}, 404
 
@@ -83,7 +89,7 @@ class VideoFeedStop(Resource):
     def get(cls, feed_id: str):
         video_feed = VideoFeedModel.find_by_id(feed_id)
         if video_feed:
-            RecognitionCamera.stop_feed()
+            RecognitionCamera.stop(feed_id)
             try:
                 video_feed.is_active = False
                 video_feed.save_to_db()

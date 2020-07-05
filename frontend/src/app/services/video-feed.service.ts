@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 export class VideoFeedService {
   _feedListUrl = "http://localhost:5000/video_feeds";
   _feedAddUrl = "http://localhost:5000/video_feeds/add"
+  _feedPreviewUrl = "http://localhost:5000/video_feeds/preview";
   _feedStartUrl = "http://localhost:5000/video_feeds/start";
   _feedStopUrl = "http://localhost:5000/video_feeds/stop";
   _feedDeleteUrl = "http://localhost:5000/video_feeds/delete";
@@ -21,6 +22,10 @@ export class VideoFeedService {
 
   addVideoFeed(_feed){
     return this.http.post<any>(this._feedAddUrl, _feed);
+  }
+
+  getVideoFeed(feed_id){
+    return this.http.get<any>(this._feedListUrl + "/" + feed_id.toString());
   }
 
   deleteVideoFeed(feed_id){
