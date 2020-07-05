@@ -14,7 +14,7 @@ from src.settings import (
     ENCODINGS_FILE
 )
 from src.libs.base_camera import BaseCamera
-from src.models import StudentModel, AttendanceModel
+from src.models import StudentModel, AttendanceModel, VideoFeedModel
 
 
 class DetectionCamera(BaseCamera):
@@ -47,11 +47,15 @@ class DetectionCamera(BaseCamera):
 
 class RecognitionCamera(BaseCamera):
     video_source = 0
+    # this class variable will help to process every other frame of video to save time
     process_this_frame = True
 
-    def __init__(self):
+    def __init__(self, video_feed: VideoFeedModel):
         if VIDEO_SOURCE:
+            self.video_feed = video_feed
+            print(video_feed.id)
             RecognitionCamera.set_video_source(VIDEO_SOURCE)
+            # RecognitionCamera.set_video_source(video_feed.url)
         super(RecognitionCamera, self).__init__()
 
     @classmethod
@@ -61,8 +65,8 @@ class RecognitionCamera(BaseCamera):
     @classmethod
     def frames(cls):
         print("[INFO] starting video stream...")
-        # store input video stream in camera variable
         camera = cv2.VideoCapture(cls.video_source)
+        # store input video stream in camera variable
         if not camera.isOpened():
             raise RuntimeError('Could not start camera.')
 
@@ -82,12 +86,12 @@ class RecognitionCamera(BaseCamera):
         while True:
             # read current frame
             _, img = camera.read()
-
             yield cls.recognize_n_attendance(img, attendance, data, known_students)
 
     @classmethod
     def recognize_n_attendance(cls, frame: np.ndarray, attendance: AttendanceModel,
                                data: Dict, known_students: Dict) -> bytes:
+        print("playing...")
         # convert the input frame from BGR to RGB then resize it to have
         # a width of 750px (to speedup processing)
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)

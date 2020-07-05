@@ -7,15 +7,18 @@ import { IStudent } from 'src/app/interfaces/student';
 import { StudentService } from 'src/app/services/student.service';
 
 @Component({
-  selector: 'app-student',
-  templateUrl: './student.component.html',
-  styleUrls: ['./student.component.css']
+  selector: 'app-student-list',
+  templateUrl: './student-list.component.html',
+  styleUrls: ['./student-list.component.css']
 })
-export class StudentComponent implements OnInit {
+export class StudentListComponent implements OnInit {
+
+  trashIcon = faTrashAlt;
 
   studentForm: FormGroup;
+  public formIsCollapsed = true;
   public students: IStudent[] = [];
-  trashIcon = faTrashAlt;
+  
   addResponseMsg = '';
   delResponseMsg = '';
 
@@ -53,7 +56,7 @@ export class StudentComponent implements OnInit {
   }
 
   deleteStudent(student_id, index){
-    console.log(student_id);
+    // console.log(student_id);
     this._studentService.deleteStudent(student_id).subscribe(
       res => {
         // console.log(res);

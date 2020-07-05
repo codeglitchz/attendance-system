@@ -1,7 +1,8 @@
 from typing import List
+from uuid import uuid4
 from datetime import date as dt, datetime as dtime
 
-from sqlalchemy import Column, Integer, String, Date, TIMESTAMP, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, Date, TIMESTAMP, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
 
@@ -110,6 +111,34 @@ class AttendanceModel(Base):
 
     def is_marked(self, student: StudentModel) -> bool:
         return student in self.students
+
+    def save_to_db(self) -> None:
+        Session.add(self)
+        Session.commit()
+
+    def delete_from_db(self) -> None:
+        Session.delete(self)
+        Session.commit()
+
+
+class VideoFeedModel(Base):
+    __tablename__ = "video_feeds"
+
+    id = Column(String(30), nullable=False, primary_key=True)
+    is_active = Column(Boolean, default=False)
+    url = Column(String, nullable=False)
+
+    @classmethod
+    def find_by_id(cls, _id: str) -> "VideoFeedModel":
+        return Session.query(cls).filter_by(id=_id).first()
+
+    @classmethod
+    def find_by_url(cls, url: str) -> "VideoFeedModel":
+        return Session.query(cls).filter_by(url=url).first()
+
+    @classmethod
+    def find_all(cls) -> List["VideoFeedModel"]:
+        return Session.query(cls).all()
 
     def save_to_db(self) -> None:
         Session.add(self)

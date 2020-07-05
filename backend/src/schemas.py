@@ -1,7 +1,7 @@
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 from marshmallow_sqlalchemy.fields import Nested
 
-from src.models import TeacherModel, StudentModel, AttendanceModel
+from src.models import TeacherModel, StudentModel, AttendanceModel, VideoFeedModel
 
 
 class TeacherSchema(SQLAlchemyAutoSchema):
@@ -31,3 +31,11 @@ class AttendanceSchema(SQLAlchemyAutoSchema):
         StudentSchema,
         many=True
     )
+
+
+class VideoFeedSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = VideoFeedModel
+        # load_only = ()  # during deserialization dictionary -> object
+        dump_only = ("is_active",)  # during serialization object -> dictionary
+        load_instance = True  # Optional: deserialize to object/model instances

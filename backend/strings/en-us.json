@@ -9,6 +9,13 @@
   "login_to_continue": "Failure! More data available if you log in",
 
   "error_inserting": "An error occurred while inserting the item",
+
   "student_deleted": "'{}' with id={} was removed",
-  "student_not_found": "Student not found"
+  "student_not_found": "Student not found",
+
+  "video_feed_deleted": "Video Feed for Classroom {} was removed",
+  "video_feed_not_found": "Video Feed not found.",
+  "video_feed_stopped": "Video Feed has been stopped",
+
+  "internal_server_error": "Internal Server Error"
 }
