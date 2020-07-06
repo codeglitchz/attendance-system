@@ -8,52 +8,17 @@ import numpy as np
 import face_recognition
 
 from src.settings import (
-    VIDEO_SOURCE,
-    PROTOTXT_PATH, CAFFEMODEL_PATH,
     DLIB_MODEL, DLIB_TOLERANCE,
     ENCODINGS_FILE
 )
 from src.libs.base_camera import BaseCamera
-from src.models import StudentModel, AttendanceModel, VideoFeedModel
-
-
-class DetectionCamera(BaseCamera):
-    video_source = 0
-
-    def __init__(self):
-        if VIDEO_SOURCE:
-            DetectionCamera.set_video_source(VIDEO_SOURCE)
-        super(DetectionCamera, self).__init__()
-
-    @classmethod
-    def set_video_source(cls, source):
-        cls.video_source = source
-
-    @classmethod
-    def frames(cls):
-        camera = cv2.VideoCapture(cls.video_source)
-        if not camera.isOpened():
-            raise RuntimeError('Could not start camera.')
-
-        while True:
-            # read current frame
-            _, img = camera.read()
-
-            # TODO: logic of face detection
-
-            # encode as a jpeg image and return it
-            yield cv2.imencode('.jpg', img)[1].tobytes()
+from src.models import StudentModel, AttendanceModel
 
 
 class RecognitionCamera(BaseCamera):
     video_source = 0
     # this class variable will help to process every other frame of video to save time
     process_this_frame = True
-
-    # def __init__(self, unique_id=None):
-    #     if VIDEO_SOURCE:
-    #         RecognitionCamera.set_video_source(VIDEO_SOURCE)
-    #     super(RecognitionCamera, self).__init__(unique_id)
 
     @classmethod
     def set_video_source(cls, source):

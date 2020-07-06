@@ -8,6 +8,7 @@
   "you_are_logged_in": "Success! You are now logged in",
   "login_to_continue": "Failure! More data available if you log in",
 
+  "internal_server_error": "Internal Server Error",
   "error_inserting": "An error occurred while inserting the item",
 
   "student_deleted": "'{}' with id={} was removed",
@@ -17,5 +18,10 @@
   "video_feed_not_found": "Video Feed not found.",
   "video_feed_stopped": "Video Feed has been stopped",
 
-  "internal_server_error": "Internal Server Error"
+  "image_uploaded": "Image '{}' uploaded.",
+  "image_illegal_extension": "Extension '{}' is not allowed.",
+  "image_illegal_file_name": "Illegal '{}' filename requested.",
+  "image_not_found": "Image '{}' not found.",
+  "image_deleted": "Image '{}' deleted.",
+  "image_delete_failed": "Internal server error! Failed to delete image."
 }

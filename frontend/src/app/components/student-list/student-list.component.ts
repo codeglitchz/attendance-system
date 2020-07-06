@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 
@@ -22,7 +23,9 @@ export class StudentListComponent implements OnInit {
   addResponseMsg = '';
   delResponseMsg = '';
 
-  constructor(private _studentService: StudentService, private fb: FormBuilder) { }
+  constructor(
+    private _studentService: StudentService, private fb: FormBuilder, 
+    private _router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.studentForm = this.fb.group({
@@ -47,12 +50,17 @@ export class StudentListComponent implements OnInit {
     console.log(this.studentForm.value);
     this._studentService.addStudent(this.studentForm.value).subscribe(
       res => {
-        this.students.push(res);
-        this.delResponseMsg = '';
-        this.addResponseMsg = `'${res.name}' has been added successfully`;
+        this.captureFaces(res.id)
+        // this.students.push(res);
+        // this.delResponseMsg = '';
+        // this.addResponseMsg = `'${res.name}' has been added successfully`;
         
       }
     );
+  }
+
+  captureFaces(student_id){
+    this._router.navigate(['capture/' + student_id], {relativeTo: this.route});
   }
 
   deleteStudent(student_id, index){

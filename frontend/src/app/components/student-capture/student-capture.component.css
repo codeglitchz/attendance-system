@@ -1,0 +1,21 @@
+body {
+  background-color: #F0F0F0;
+}
+
+#capture-video-feed {
+  text-align: center;
+  color: #2c3e50;
+}
+
+#video {
+  background-color: #000000;
+}
+
+#canvas {
+  display: none;
+}
+
+li {
+  display: inline;
+  padding: 5px;
+}

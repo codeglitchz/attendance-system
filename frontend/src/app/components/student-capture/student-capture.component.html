@@ -1,0 +1,22 @@
+<div class="mt-5">
+    <ngb-alert *ngIf="errorMsg" [type]="'danger'" (close)="errorMsg=''">{{ errorMsg }}</ngb-alert>
+</div>
+
+<div id="capture-video-feed" class="mt-3">
+    <!--video-feed-->
+    <!--video tag with a #video template reference variable-->
+    <div><video #video id="video" width="640" height="480" autoplay muted></video></div>
+        <!--button with on click execution of capture() function-->
+    <button class="mr-3 mt-3 btn btn-danger" id="reset" (click)="resetCaptures()">Reset</button>
+    <button class="mt-3 btn btn-primary" id="capture" (click)="capture()">Capture</button>
+    <button class="ml-3 mt-3 btn btn-success" id="submit" (click)="saveCaptures()">Submit</button>
+    <!--canvas tag with a #canvas template refernce variable-->
+    <canvas #canvas id="canvas" width="640" height="480"></canvas>
+    <!--list of our pictures stored in captures array-->
+    <ul>
+        <li *ngFor="let c of captures">
+            <img class="mt-3" src="{{ c }}" height="50" />
+        </li>
+    </ul>
+    <!--/video-feed-->
+</div>
