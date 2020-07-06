@@ -9,7 +9,7 @@
 > A simple, modern and scalable facial recognition based attendance system 
 > built with Python back-end & Angular front-end
 
-#### [UI](https://github.com/codeglitchz/attendance-system/blob/master/sample/ui.gif)
+[UI](https://github.com/codeglitchz/attendance-system/blob/master/sample/ui.gif)
 
 ## Table of contents
 * [Prerequisites](#prerequisites)
