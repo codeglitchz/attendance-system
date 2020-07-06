@@ -1,12 +1,6 @@
 <h1 align="center">Attendance System using Face Recognition</h1>
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
-  <a href="https://github.com/codeglitchz/attendance-system#readme" target="_blank">
-    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
-  </a>
-  <a href="https://github.com/codeglitchz/attendance-system/graphs/commit-activity" target="_blank">
-    <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
-  </a>
   <a href="https://github.com/codeglitchz/attendance-system/blob/master/LICENSE" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/github/license/codeglitchz/attendance-system" />
   </a>
@@ -15,22 +9,25 @@
 > A simple, modern and scalable facial recognition based attendance system 
 > built with Python back-end & Angular front-end
 
-### 🏠 [Homepage](https://github.com/codeglitchz/attendance-system#readme)
+#### [UI](https://github.com/codeglitchz/attendance-system/blob/master/sample/ui.gif)
 
 ## Table of contents
 * [Prerequisites](#prerequisites)
 * [Installation](#installation)
-    1. [Clone repository](#clone-repository)
-    2. [Setup backend](#setup-backend)
-    3. [Setup frontend](#setup-frontend)
-* [Usage](#usage)
-    1. [Using CLI](#using-cli)
-    2. [Using Web Interface](#using-web-interface)
+    1. [Clone repository](#1-clone-repository)
+    2. [Setup backend](#2-setup-backend)
+    3. [Setup frontend](#3-setup-frontend)
+* [Usage](#usage)\
+    a. [Using CLI](#a-using-cli)\
+    b. [Using Web Interface](#b-using-web-interface)
 
 ## Prerequisites
 
 * Python v3.7+
 * Miniconda3 (optional) (recommended)
+* CMake
+* Visual Studio Build Tools
+* Nvidia CUDA (optional - for nvidia gpus)
 * Node.js LTS v12.8.0+ (npm v6.14.4+)
 * Angular CLI v9.1.8+
 * Windows or Linux (macOS not officially supported, but might work)
@@ -38,8 +35,9 @@
 ## Installation
 
 #### 1. Clone repository
+For stable release, clone `master` branch
 ```sh
-$ git clone https://github.com/codeglitchz/attendance-system
+$ git clone -b master https://github.com/codeglitchz/attendance-system.git
 $ cd attendance-system
 ```
 #### 2. Setup backend
@@ -96,13 +94,9 @@ $ ng serve -o
 
 ## Authors
 
-👤 **CodeGlitchz**
+👤 [**@codeglitchz**](https://github.com/codeglitchz)
 
-* Github: [@codeglitchz](https://github.com/codeglitchz)
-
-👤 **CodeWhizz**
-
-* Github: [@codewhizz](https://github.com/codewhizz)
+👤 [**@codewhizz**](https://github.com/codewhizz)
 
 ## 🤝 Contributing
 
