@@ -16,7 +16,7 @@ flask
 requests
 flask-cors
 flask-restful
-flask-uploads
+flask-reuploaded
 flask-jwt-extended
 sqlalchemy
 marshmallow

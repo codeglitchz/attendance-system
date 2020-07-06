@@ -26,4 +26,4 @@ dependencies:
   - marshmallow-sqlalchemy
   - pip:
       - face-recognition
-      - flask-uploads
+      - flask-reuploaded
