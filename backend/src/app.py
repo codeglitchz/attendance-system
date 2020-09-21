@@ -8,7 +8,7 @@ from marshmallow import ValidationError
 from src.libs.image_helper import IMAGE_SET
 from src.resources.dashboard import Dashboard
 from src.resources.teacher import Teacher, TeacherRegister, TeacherLogin
-from src.resources.student import StudentList, StudentAdd, StudentCapture, StudentDelete, TrainClassifier
+from src.resources.student import StudentList, StudentAdd, StudentCapture, StudentDelete
 from src.resources.attendance import AttendanceList
 from src.resources.video_feed import (
     VideoFeedList, VideoFeedAdd, VideoFeed, VideoFeedPreview, VideoFeedStop, VideoFeedStart, VideoFeedDelete
@@ -51,7 +51,6 @@ api.add_resource(StudentList, "/students")
 api.add_resource(StudentAdd, "/students/add")
 api.add_resource(StudentCapture, "/students/capture/<int:student_id>")
 api.add_resource(StudentDelete, "/students/delete/<int:student_id>")
-api.add_resource(TrainClassifier, "/students/train")
 
 # /attendance
 api.add_resource(AttendanceList, "/attendance")

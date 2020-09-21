@@ -9,7 +9,7 @@
 </p>
 
 > A simple, modern and scalable facial recognition based attendance system 
-> built with Python back-end & Angular front-end
+> built with Python back-end & Angular front-end.
 
 ![UI](sample/ui.gif)
 
@@ -25,14 +25,13 @@
 
 ## Prerequisites
 
-* Python v3.7+
-* Miniconda3 (optional) (recommended)
-* CMake
-* Visual Studio Build Tools
-* Nvidia CUDA (optional - for nvidia gpus)
-* Node.js LTS v12.8.0+ (npm v6.14.4+)
-* Angular CLI v9.1.8+
 * Windows or Linux (macOS not officially supported, but might work)
+* Nvidia CUDA (optional - for nvidia gpus)
+* [CMake](https://cmake.org/download/)
+* [Visual Studio Build Tools](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019)
+* [Miniconda](https://docs.conda.io/en/latest/miniconda.html) for Python v3.7+
+* [Node.js LTS](https://nodejs.org/en/) v12.8.0+ (npm v6.14.4+)
+* [Angular CLI](https://cli.angular.io/) v9.1.8+
 
 ## Installation
 
@@ -94,21 +93,10 @@ $ cd frontend
 $ ng serve -o
 ```
 
-## Authors
-
-👤 [**@codeglitchz**](https://github.com/codeglitchz)
-
-👤 [**@codewhizz**](https://github.com/codewhizz)
-
 ## 🤝 Contributing
 
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/codeglitchz/attendance-system/issues). You can also take a look at the [contributing guide](https://github.com/codeglitchz/attendance-system/blob/master/CONTRIBUTING.md).
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/codeglitchz/attendance-system/issues).
 
 ## Show your support
 
 Give a ⭐️ if this project helped you!
-
-## 📝 License
-
-Copyright © 2020 [CodeGlitchz](https://github.com/codeglitchz). <br />
-This project is [MIT](https://github.com/codeglitchz/attendance-system/blob/master/LICENSE) licensed.

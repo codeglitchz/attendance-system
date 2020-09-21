@@ -3,6 +3,7 @@ import os
 import pyfiglet
 
 from src.db import engine
+from src.libs.train_classifier import TrainClassifier
 from src.models import Base
 from src.settings import VIDEO_SOURCE
 from src.libs.cli_utils import CliAppUtils
@@ -53,7 +54,7 @@ def main_menu():
                 face_util.detect_n_capture()
                 break
             elif choice == 3:
-                face_util.train_classifier()
+                TrainClassifier.train()
                 break
             elif choice == 4:
                 face_util.recognize_n_attendance()
