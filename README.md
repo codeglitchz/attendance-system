@@ -30,8 +30,8 @@
 * [CMake](https://cmake.org/download/)
 * [Visual Studio Build Tools](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019)
 * [Miniconda](https://docs.conda.io/en/latest/miniconda.html) for Python v3.7+
-* [Node.js LTS](https://nodejs.org/en/) v12.8.0+ (npm v6.14.4+)
-* [Angular CLI](https://cli.angular.io/) v9.1.8+
+* [Node.js LTS](https://nodejs.org/en/) v12.8.3+ (npm v6.14.6+)
+* [Angular CLI](https://cli.angular.io/) v10.1.2+
 
 ## Installation
 
