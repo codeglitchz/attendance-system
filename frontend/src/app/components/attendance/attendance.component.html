@@ -7,12 +7,10 @@
     </tr>
   </thead>
   <tbody>
-    <ng-container *ngFor="let day of attendances; index as i">
-        <tr *ngFor="let student of day.students; index as j">
-            <th scope="row">{{ day.date | date:'shortDate'}}</th>
-            <td> {{ student.name }} </td>
-            <td> {{ day.time | date:'mediumTime' }} </td>
-        </tr>
-    </ng-container>
+    <tr *ngFor="let attendance of attendances">
+        <th scope="row">{{ attendance.date | date:'shortDate'}}</th>
+        <td> {{ attendance.student.name }} </td>
+        <td> {{ attendance.date | date:'mediumTime' }} </td>
+    </tr>
   </tbody>
 </table>

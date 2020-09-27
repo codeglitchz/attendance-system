@@ -28,12 +28,10 @@ class AttendanceSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = AttendanceModel
         # load_only = ()  # during deserialization dictionary -> object
-        dump_only = ("date", "time", "students")  # during serialization object -> dictionary
+        dump_only = ("date", "student")  # during serialization object -> dictionary
         load_instance = True  # Optional: deserialize to object/model instances
-    # Override books field to use a nested representation rather than pks
-    students = Nested(
-        StudentSchema,
-        many=True
+    student = Nested(
+        StudentSchema
     )
 
 

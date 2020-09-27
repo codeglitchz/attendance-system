@@ -101,13 +101,6 @@ class CliAppUtils:
         # store input video stream in cap variable
         cap = cv2.VideoCapture(self.input_video)
 
-        # find if today's attendance exists in the database
-        attendance = AttendanceModel.find_by_date(date=dt.today())
-        # if not
-        if attendance is None:
-            # create new instance for today's attendance
-            attendance = AttendanceModel()
-
         # create in dictionary for known students from database to avoid multiple queries
         known_students = {}
 
@@ -163,12 +156,12 @@ class CliAppUtils:
                             # find matched student in the database by id
                             student = StudentModel.find_by_id(_id)
                             known_students[_id] = student
-                        # if student's attendance is not marked
-                        if not attendance.is_marked(student):
-                            # then mark student's attendance
-                            attendance.students.append(student)
-                            # commit changes to database
-                            attendance.save_to_db()
+                            # if student's attendance is not marked
+                            if not AttendanceModel.is_marked(dt.today(), student):
+                                # then mark student's attendance
+                                student_attendance = AttendanceModel(student=student)
+                                # commit changes to database
+                                student_attendance.save_to_db()
                         # update displayed name to student's name
                         display_name = student.name
                 # append the name to be displayed in names list

@@ -37,22 +37,15 @@ class RecognitionCamera(BaseCamera):
         data = pickle.loads(open(ENCODINGS_FILE, "rb").read())
         # print(len(data['encodings']) == len(data['ids']))
 
-        # find if today's attendance exists in the database
-        attendance = AttendanceModel.find_by_date(date=dt.today())
-        # if not
-        if attendance is None:
-            # create new instance for today's attendance
-            attendance = AttendanceModel()
-
         # create in dictionary for known students from database to avoid multiple queries
         known_students = {}
         while True:
             # read current frame
             _, img = camera.read()
-            yield cls.recognize_n_attendance(img, attendance, data, known_students)
+            yield cls.recognize_n_attendance(img, data, known_students)
 
     @classmethod
-    def recognize_n_attendance(cls, frame: np.ndarray, attendance: AttendanceModel,
+    def recognize_n_attendance(cls, frame: np.ndarray,
                                data: Dict, known_students: Dict) -> bytes:
         # convert the input frame from BGR to RGB then resize it to have
         # a width of 750px (to speedup processing)
@@ -106,12 +99,12 @@ class RecognitionCamera(BaseCamera):
                             # find matched student in the database by id
                             student = StudentModel.find_by_id(_id)
                             known_students[_id] = student
-                        # if student's attendance is not marked
-                        if not attendance.is_marked(student):
-                            # then mark student's attendance
-                            attendance.students.append(student)
-                            # commit changes to database
-                            attendance.save_to_db()
+                            # if student's attendance is not marked
+                            if not AttendanceModel.is_marked(dt.today(), student):
+                                # then mark student's attendance
+                                student_attendance = AttendanceModel(student=student)
+                                # commit changes to database
+                                student_attendance.save_to_db()
                         # update displayed name to student's name
                         display_name = student.name
                 # append the name to be displayed in names list

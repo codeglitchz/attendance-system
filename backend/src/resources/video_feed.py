@@ -42,8 +42,17 @@ class VideoFeedPreview(Resource):
         video_feed = VideoFeedModel.find_by_id(feed_id)
         feed_url = video_feed.url
         camera_stream = RecognitionCamera
+        # Camera Device Selection
         if feed_url == "0":
             feed_url = 0
+        elif feed_url == "1":
+            feed_url = 1
+        elif feed_url == "2":
+            feed_url = 2
+        elif feed_url == "3":
+            feed_url = 3
+        elif feed_url == "4":
+            feed_url = 4
         camera_stream.set_video_source(feed_url)
         if video_feed:
             resp = Response(
