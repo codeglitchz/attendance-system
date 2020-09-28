@@ -1,6 +1,5 @@
 <h1 align="center">Attendance System using Face Recognition</h1>
 
-[![HitCount](http://hits.dwyl.com/codeglitchz/attendance-system.svg)](http://hits.dwyl.com/codeglitchz/attendance-system)
 <a href="https://github.com/codeglitchz/attendance-system/blob/master/LICENSE" target="_blank">
 <img alt="License: MIT" src="https://img.shields.io/github/license/codeglitchz/attendance-system" />
 </a>
