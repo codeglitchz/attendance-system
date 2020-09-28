@@ -12,7 +12,7 @@
 > A simple, modern and scalable facial recognition based attendance system 
 > built with Python back-end & Angular front-end.
 
-#####[Watch Demo Video](https://www.youtube.com/watch?v=9-7uR78ab5c)
+[Watch Demonstration Video](https://www.youtube.com/watch?v=9-7uR78ab5c)
 
 ## Table of contents
 * [Prerequisites](#prerequisites)
