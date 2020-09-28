@@ -1,24 +1,24 @@
 <h1 align="center">Attendance System using Face Recognition</h1>
-<p>
-  <a href="https://github.com/codeglitchz/attendance-system/releases/tag/v2.0.0" target="_blank">
-    <img alt="Version" src="https://img.shields.io/badge/version-v2.0.0-blue.svg?cacheSeconds=2592000" />
-  </a>
-  <a href="https://github.com/codeglitchz/attendance-system/blob/master/LICENSE" target="_blank">
-    <img alt="License: MIT" src="https://img.shields.io/github/license/codeglitchz/attendance-system" />
-  </a>
-</p>
+
+[![HitCount](http://hits.dwyl.com/codeglitchz/attendance-system.svg)](http://hits.dwyl.com/codeglitchz/attendance-system)
+<a href="https://github.com/codeglitchz/attendance-system/blob/master/LICENSE" target="_blank">
+<img alt="License: MIT" src="https://img.shields.io/github/license/codeglitchz/attendance-system" />
+</a>
+<a href="https://github.com/codeglitchz/attendance-system/releases/tag/v2.1.1" target="_blank">
+<img alt="Version" src="https://img.shields.io/badge/version-v2.1.1-blue.svg?cacheSeconds=2592000" />
+</a>
+
 
 > A simple, modern and scalable facial recognition based attendance system 
 > built with Python back-end & Angular front-end.
 
-![UI](sample/ui.gif)
+#####[Watch Demo Video](https://www.youtube.com/watch?v=9-7uR78ab5c)
 
 ## Table of contents
 * [Prerequisites](#prerequisites)
 * [Installation](#installation)
-    1. [Clone repository](#1-clone-repository)
-    2. [Setup backend](#2-setup-backend)
-    3. [Setup frontend](#3-setup-frontend)
+    1. [Setup backend](#1-setup-backend)
+    2. [Setup frontend](#2-setup-frontend)
 * [Usage](#usage)\
     a. [Using CLI](#a-using-cli)\
     b. [Using Web Interface](#b-using-web-interface)
@@ -35,13 +35,7 @@
 
 ## Installation
 
-#### 1. Clone repository
-For stable release, clone `master` branch
-```sh
-$ git clone -b master https://github.com/codeglitchz/attendance-system.git
-$ cd attendance-system
-```
-#### 2. Setup backend
+#### 1. Setup backend
 
 Install all dependencies using conda package manager
 > Note: This will install the dependencies listed in `environments.yml` file
@@ -55,7 +49,7 @@ Now you can activate this environment using the following command
 $ conda activate attendance-system
 ```
 
-#### 3. Setup frontend
+#### 2. Setup frontend
 Install all dependencies using npm package manager
 > Note: This will install the dependencies listed in `package.json` file
 ```sh
@@ -74,6 +68,7 @@ $ cd backend
 $ conda activate attendance-system
 $ python run_cli.py
 ```
+![cli_snip](sample/cli_snip.JPG)
 
 #### B. Using Web Interface
 Start the Flask Web Server 
@@ -92,6 +87,7 @@ Launch the Angular Web Application
 $ cd frontend
 $ ng serve -o
 ```
+![web_snip](sample/web_snip.JPG)
 
 ## 🤝 Contributing
 
