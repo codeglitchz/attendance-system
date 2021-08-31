@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
-from flask_uploads import configure_uploads, patch_request_class
+from flask_uploads import configure_uploads
 from marshmallow import ValidationError
 
 from src.libs.image_helper import IMAGE_SET
@@ -18,7 +18,6 @@ from src.resources.video_feed import (
 app = Flask(__name__)
 app.config.from_object("src.settings.FlaskAppConfiguration")
 api = Api(app)
-patch_request_class(app, 2 * 1024 * 1024)  # 2 MB max size upload
 configure_uploads(app, IMAGE_SET)
 jwt = JWTManager(app)
 cors = CORS(app)
